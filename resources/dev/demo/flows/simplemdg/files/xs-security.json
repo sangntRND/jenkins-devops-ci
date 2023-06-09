@@ -1,0 +1,147 @@
+{
+	"xsappname": "simplemdg",
+	"tenant-mode": "dedicated",
+	"description": "Security profile of SimpleMDG application",
+	"scopes": [
+	  {
+		"name": "uaa.user",
+		"description": "UAA"
+	  },
+	  {
+		"name": "$XSAPPNAME.Callback",
+		"description": "With this scope set, the callbacks for tenant onboarding, offboarding and getDependencies can be called.",
+		"grant-as-authority-to-apps": [
+		  "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+		]
+	  },
+	  {
+		"name": "$XSAPPNAME.Admin",
+		"description": "Admin scope"
+	  },
+	  {
+		"name": "$XSAPPNAME.Requestor",
+		"description": "Requestor scope"
+	  },
+	  {
+		"name": "$XSAPPNAME.Approver",
+		"description": "Approver scope"
+	  },
+	  {
+		"name": "$XSAPPNAME.Steward",
+		"description": "Steward scope"
+	  },
+	  {
+		"name": "$XSAPPNAME.StewardManager",
+		"description": "Steward Manager scope"
+	  },
+	  {
+		"name": "$XSAPPNAME.ProjectManager",
+		"description": "ProjectManager scope"
+	  }
+	],
+	"role-templates": [
+	  {
+		"name": "Token_Exchange",
+		"description": "UAA Token Exchange",
+		"scope-references": [
+		  "uaa.user"
+		]
+	  },
+	  {
+		"name": "Admin",
+		"description": "Admin Role (No object type)",
+		"scope-references": [
+		  "uaa.user",
+		  "$XSAPPNAME.Admin"
+		]
+	  },
+	  {
+		"name": "Steward",
+		"description": "Steward Role (No object type)",
+		"scope-references": [
+		  "uaa.user",
+		  "$XSAPPNAME.Steward"
+		]
+	  },
+	  {
+		"name": "StewardManager",
+		"description": "Steward Manager Role (No object type)",
+		"scope-references": [
+		  "uaa.user",
+		  "$XSAPPNAME.StewardManager"
+		]
+	  },
+	  {
+		"name": "Requestor",
+		"description": "Requestor Role",
+		"scope-references": [
+		  "uaa.user",
+		  "$XSAPPNAME.Requestor"
+		]
+	  },
+	  {
+		"name": "Approver",
+		"description": "Approver Role",
+		"scope-references": [
+		  "uaa.user",
+		  "$XSAPPNAME.Approver"
+		]
+	  },
+	  {
+		"name": "ProjectManager",
+		"description": "ProjectManager Role",
+		"scope-references": [
+		  "uaa.user",
+		  "$XSAPPNAME.ProjectManager"
+		]
+	  }
+	],
+	"role-collections": [
+	  {
+		"name": "SIMPLEMDG_Admin",
+		"description": "Admin Access (no object type)",
+		"role-template-references": [
+		  "$XSAPPNAME.Admin"
+		]
+	  },
+	  {
+		"name": "SIMPLEMDG_Steward",
+		"description": "Steward Access (no object type)",
+		"role-template-references": [
+		  "$XSAPPNAME.Steward"
+		]
+	  },
+	  {
+		"name": "SIMPLEMDG_StewardManager",
+		"description": "Steward Manager Access (no object type)",
+		"role-template-references": [
+		  "$XSAPPNAME.StewardManager"
+		]
+	  },
+	  {
+		"name": "SIMPLEMDG_Requestor",
+		"description": "Requestor Access (no object type)",
+		"role-template-references": [
+		  "$XSAPPNAME.Requestor"
+		]
+	  },
+	  {
+		"name": "SIMPLEMDG_Approver",
+		"description": "Approver Access (no object type)",
+		"role-template-references": [
+		  "$XSAPPNAME.Approver"
+		]
+	  },
+	  {
+		"name": "SIMPLEMDG_ProjectManager",
+		"description": "ProjectManager Access (no object type)",
+		"role-template-references": [
+		  "$XSAPPNAME.ProjectManager"
+		]
+	  }
+	],
+	"oauth2-configuration": {
+	  "token-validity": 3600
+	}
+  }
+  
