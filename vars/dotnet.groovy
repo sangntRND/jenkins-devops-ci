@@ -37,7 +37,7 @@ void call(Map demoBuild, String demoVersion) {
                 --build-arg BASEIMG=demo/${demoBuild.name}-sdk --build-arg IMG_VERSION=${demoVersion} \
                 --build-arg ENTRYPOINT=${demoBuild.build.runtime.name} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
             }
-        }
+    }
     stage ('Publish Images') {
         script {
             deployPushImages(demoBuild, demoVersion)
