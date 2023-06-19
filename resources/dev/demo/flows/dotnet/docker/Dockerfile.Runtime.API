@@ -7,7 +7,7 @@ FROM $BASEIMG:$IMG_VERSION as publish
 ARG DEBUG_MODE
 
 ARG PUBLISH_PROJ
-RUN dotnet publish --configuration Release --no-build --no-restore -o /app --runtime linux-x64
+RUN dotnet publish -c Release --no-build --no-restore -o /app -r linux-x64
     
 FROM $RUNIMG:$RUNVER as runtime
 ARG ENTRYPOINT
