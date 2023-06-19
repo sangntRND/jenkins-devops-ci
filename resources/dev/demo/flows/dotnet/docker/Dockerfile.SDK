@@ -1,0 +1,6 @@
+ARG BASEIMG
+ARG IMG_VERSION
+FROM $BASEIMG:$IMG_VERSION as build
+COPY . .
+RUN dotnet build -p:Configuration=Release -p:RuntimeIdentifier=linux-x64 . \
+    && chown -R 987:981 /src
