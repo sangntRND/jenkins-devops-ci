@@ -7,6 +7,7 @@ void call(Map demoBuild, String demoVersion) {
     String flowName = "${demoBuild.build.flow.name}"
     String baseImage     = "mcr.microsoft.com/dotnet/sdk"
     String baseTag       = "6.0"
+    String demoRegistry = "demotraining.azurecr.io"
     // Variables branch
     String checkBranches = "$env.BRANCH_NAME"
     String[] deployBranches = ['main', 'jenkins']
@@ -32,11 +33,14 @@ void call(Map demoBuild, String demoVersion) {
                 --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}") 
             }
             stage("Publish Package") {
-                docker.build("demo/${demoBuild.name}:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
+                docker.build("${demoRegistry}/demo/${demoBuild.name}:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
                 --build-arg BASEIMG=demo/${demoBuild.name}-sdk --build-arg IMG_VERSION=${demoVersion} \
                 --build-arg ENTRYPOINT=${demoBuild.build.runtime.name} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
             }
         }
+    stage ('Publish Images') {
+        deployPushImages(demoBuild, demoVersion)
+    }
 }
 // }
 //========================================================================
