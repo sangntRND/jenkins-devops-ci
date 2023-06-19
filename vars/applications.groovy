@@ -21,7 +21,6 @@ void call(Map demoBuild, String demoVersion) {
         script {
             writeFile file: '.ci/Dockerfile.SDK', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.SDK')
             writeFile file: '.ci/Dockerfile.Runtime.API', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.Runtime.API')
-            writeFile file: '.ci/Dockerfile.package', text: libraryResource('dev/laidon/flows/backend/simplemdg_db_industry/docker/Dockerfile.package')
         }
     }
 
