@@ -18,7 +18,7 @@ void call(Map pipelineParams) {
                 when {
                     allOf {
                         // Condition Check
-                        equals expected: false, actual: params.SKIP_BUILD
+                        // equals expected: false, actual: params.SKIP_BUILD
                         anyOf{
                             // Branch Event: Nornal Flow
                             anyOf {
