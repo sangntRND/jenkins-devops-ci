@@ -38,6 +38,7 @@ void call(Map pipelineParams) {
                 }
                 steps {
                     script {
+                        echo "Testing"
                         demoBuild = configureLoad()
                         demoVersion = configureVersion(demoBuild)
                         demoBuilder(demoBuild, demoVersion)
