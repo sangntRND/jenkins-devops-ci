@@ -36,7 +36,6 @@ void call(Map demoBuild, String demoVersion) {
                 --build-arg ENTRYPOINT=${demoBuild.build.runtime.name} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
             }
         }
-    }
 }
 // }
 //========================================================================
