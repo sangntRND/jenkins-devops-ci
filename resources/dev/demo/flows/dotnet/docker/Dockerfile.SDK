@@ -2,4 +2,4 @@ ARG BASEIMG
 ARG IMG_VERSION
 FROM $BASEIMG:$IMG_VERSION as build
 COPY . .
-RUN dotnet build --configuration Release -r linux-x64 .
+RUN dotnet build -c Release -p:DOTNET_RUNTIME_IDENTIFIER==linux-x64 .
