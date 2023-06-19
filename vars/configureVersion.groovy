@@ -21,10 +21,6 @@ void call(Map demoBuild) {
     gitVersion = readJSON text: gvOut
 
     demoVersion = ("${gitVersion.Major}.${gitVersion.Minor}.${gitVersion.Patch}-${gitVersion.PreReleaseLabel.toLowerCase()}-${BUILD_NUMBER}").trim()
-    if (buildFlow == "dotnet") {
-        // Update the Assembly Version 
-        changeAsmVer assemblyCompany: 'demo, Inc.', assemblyCopyright: 'Copyright (c) demo, Inc. All rights reserved.', assemblyCulture: 'Language Neutral', assemblyProduct: "${demoBuild.name}", versionPattern: "${demoVersion}"
-    }
     currentBuild.displayName = demoVersion
     return demoVersion
 }
