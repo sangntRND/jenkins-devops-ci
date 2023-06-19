@@ -30,7 +30,7 @@ void call(Map demoBuild, String demoVersion) {
                 docker.build("demo/${demoBuild.name}-sdk:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
                 --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}") 
             }
-            stage("Publish ${rt.name}") {
+            stage("Publish Package") {
                 docker.build("demo/${demoBuild.name}:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
                 --build-arg BASEIMG=demo/${demoBuild.name}-sdk --build-arg IMG_VERSION=${demoVersion} \
                 --build-arg ENTRYPOINT=${demoBuild.build.runtime.name} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")

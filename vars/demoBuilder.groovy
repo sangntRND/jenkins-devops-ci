@@ -2,7 +2,7 @@
 void call(Map demoBuild, String demoVersion) {
     switch (demoBuild.build.flow.name) {
         case 'dotnet':
-            applications(demoBuild, demoVersion)
+            dotnet(demoBuild, demoVersion)
         break
         default:
             // no case build
