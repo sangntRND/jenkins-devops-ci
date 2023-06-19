@@ -23,6 +23,8 @@ void call(Map demoBuild, String demoVersion) {
             writeFile file: '.ci/Dockerfile.SDK', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.SDK')
             writeFile file: '.ci/Dockerfile.Runtime.API', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.Runtime.API')
             writeFile file: '.ci/docker_entrypoint.sh', text: libraryResource('dev/demo/flows/dotnet/script/docker_entrypoint.sh')
+            writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/aks/deployment.yml')
+            writeFile file: '.ci/service.yml', text: libraryResource('deploy/aks/service.yml')
         }
     }
 
@@ -40,7 +42,12 @@ void call(Map demoBuild, String demoVersion) {
     }
     stage ('Publish Images') {
         script {
-            deployPushImages(demoBuild, demoVersion)
+            pushImages(demoBuild, demoVersion)
+        }
+    }
+    stage ('Deploy to K8S') {
+        script {
+            deploytok8s(demoBuild, demoVersion)
         }
     }
 }
