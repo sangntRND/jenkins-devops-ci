@@ -13,13 +13,6 @@ void call(Map pipelineParams) {
             timeout(time: 1, unit: 'HOURS')
         }
         
-        parameters {
-            booleanParam(
-                name: 'SKIP_BUILD',
-                defaultValue: false,
-                description: 'Skip building the image and downstream step.')
-        }
-
         stages {
             stage ('Load Pipeline') {
                 when {
@@ -31,7 +24,7 @@ void call(Map pipelineParams) {
                             anyOf {
                                 branch 'main'
                                 branch 'develop'
-                                branch 'MR-*'
+                                branch 'PR-*'
                             }
                             // Manual Run: Only if checked.
                             allOf{
@@ -56,7 +49,6 @@ void call(Map pipelineParams) {
         post {
             cleanup {
                 cleanWs()
-                // postCleanup(demoBuild, demoVersion)
             }
         }
     }
