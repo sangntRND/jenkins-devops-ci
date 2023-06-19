@@ -6,8 +6,8 @@ void call() {
         println 'Found yaml file!'
         demoBuild = readYaml file: '_demoBuild.yaml'
         println "Loaded Configuration: ${demoBuild.name}"
-        loadResourceFiles(demoBuild)
-        println "Loaded Resources: ${demoBuild.name}"
+        // loadResourceFiles(demoBuild)
+        // println "Loaded Resources: ${demoBuild.name}"
         return demoBuild
     }
 }
