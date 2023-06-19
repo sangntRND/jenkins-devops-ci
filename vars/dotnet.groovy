@@ -39,7 +39,9 @@ void call(Map demoBuild, String demoVersion) {
             }
         }
     stage ('Publish Images') {
-        deployPushImages(demoBuild, demoVersion)
+        script {
+            deployPushImages(demoBuild, demoVersion)
+        }
     }
 }
 // }
