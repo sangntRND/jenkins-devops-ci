@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 void call(Map demoBuild, String demoVersion) {
     switch (demoBuild.build.flow.name) {
-        case 'simplemdg':
+        case 'dotnet':
             applications(demoBuild, demoVersion)
         break
         default:
