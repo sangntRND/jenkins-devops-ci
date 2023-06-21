@@ -2,7 +2,8 @@
 void call(Map demoBuild, String demoVersion) {
     // Credentials
     String flowName = "${demoBuild.build.flow.name}"
-    String baseImage     = "demotraining.azurecr.io/source/dotnet"
+    // String baseImage     = "demotraining.azurecr.io/source/dotnet"
+    String baseImage     = "mcr.microsoft.com/dotnet/sdk"
     String baseTag       = "6.0"
     String demoRegistry = "demotraining.azurecr.io"
     // Variables branch
