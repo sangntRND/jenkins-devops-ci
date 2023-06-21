@@ -33,8 +33,8 @@ void call(Map demoBuild, String demoVersion) {
                     stage('Run Unit Tests'){
                         // sh "docker run -i demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
                         // sh "ls -la"
-                        docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside {
-                            sh "/usr/bin/dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
+                        docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside("-e DOTNET_CLI_HOME='/tmp/DOTNET_CLI_HOME'") {
+                            sh "dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
                         }
                     }
                 }
