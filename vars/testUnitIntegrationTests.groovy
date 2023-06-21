@@ -35,6 +35,7 @@ void call(Map demoBuild, String demoVersion) {
                         // sh "ls -la"
                         docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside("-e DOTNET_CLI_HOME='/tmp/DOTNET_CLI_HOME' -e XDG_DATA_HOME='/tmp'") {
                             sh "dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
+                            sh "ls -la"
                         }
                     }
                 }
