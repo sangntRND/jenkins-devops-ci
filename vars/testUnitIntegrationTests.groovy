@@ -16,7 +16,7 @@ void call(Map demoBuild, String demoVersion) {
     String flowName = "${demoBuild.build.flow.name}"
     Boolean runUnit = false
     Boolean runIntegration = false
-    String rununitTest = "dotnet test --no-build -l:trx -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --verbosity detailed --results-directory ./results"
+    String rununitTest = "dotnet test --no-build -l:trx -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --verbosity minimal --results-directory ./results"
     if (demoBuild.build.testing.enabled){
         if ( unitTest.contains(env.BRANCH_NAME) ) {
             runUnit = true
@@ -31,12 +31,12 @@ void call(Map demoBuild, String demoVersion) {
             case 'dotnet':
                 if (runUnit){
                     stage('Run Unit Tests'){
-                        // sh "docker run -i demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
-                        // sh "ls -la"
-                        docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside("-e DOTNET_CLI_HOME='/tmp/DOTNET_CLI_HOME' -e XDG_DATA_HOME='/tmp'") {
-                            sh "${rununitTest}"
-                            sh "ls -la"
-                        }
+                        sh "docker run -i --rm --volume "./results:/results" demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
+                        sh "ls -la && ls -la results"
+                        // docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside("-e DOTNET_CLI_HOME='/tmp/DOTNET_CLI_HOME' -e XDG_DATA_HOME='/tmp'") {
+                        //     sh "${rununitTest}"
+                        //     sh "ls -la"
+                        // }
                     }
                 }
                 if (runIntegration){
