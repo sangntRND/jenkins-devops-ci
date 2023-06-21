@@ -31,7 +31,7 @@ void call(Map demoBuild, String demoVersion) {
                 if (runUnit){
                     stage('Run Unit Tests'){
                         docker.image("demo-sdk/${demoBuild.name}-sdk:${demoVersion}").inside('') {
-                            sh "dotnet test --no-build --collect:'XPlat Code Coverage --results-directory='$($ENV:WORKSPACE)/results'"
+                            sh "dotnet test --no-build --collect:'XPlat Code Coverage --results-directory='./results'"
                         }
                     }
                 }
