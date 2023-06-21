@@ -34,7 +34,7 @@ void call(Map demoBuild, String demoVersion) {
                         // sh "docker run -i demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
                         // sh "ls -la"
                         docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside {
-                            sh "dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
+                            sh "/usr/bin/dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
                         }
                     }
                 }
