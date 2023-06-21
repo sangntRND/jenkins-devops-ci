@@ -16,7 +16,7 @@ void call(Map demoBuild, String demoVersion) {
     String flowName = "${demoBuild.build.flow.name}"
     Boolean runUnit = false
     Boolean runIntegration = false
-    String rununitTest = "dotnet test --no-build -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --results-directory='./results'"
+    String rununitTest = "dotnet test --no-build -l:trx -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --results-directory='results'"
     if (demoBuild.build.testing.enabled){
         if ( unitTest.contains(env.BRANCH_NAME) ) {
             runUnit = true
@@ -34,7 +34,7 @@ void call(Map demoBuild, String demoVersion) {
                         // sh "docker run -i demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
                         // sh "ls -la"
                         docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside("-e DOTNET_CLI_HOME='/tmp/DOTNET_CLI_HOME' -e XDG_DATA_HOME='/tmp'") {
-                            sh "dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
+                            sh "${rununitTest}"
                             sh "ls -la"
                         }
                     }
@@ -47,16 +47,16 @@ void call(Map demoBuild, String demoVersion) {
 
                 if ( runIntegration || runUnit ){
                     stage('Process Test Results'){
-                        // docker.image("demo-sdk/${demoBuild.name}-sdk:${demoVersion}").inside() {
-                        //     xunit(
-                        //         testTimeMargin: '600000',
-                        //         thresholdMode: 1,
-                        //         thresholds: [failed(), skipped()],
-                        //         tools: [MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: "results/*.trx", skipNoTestFiles: false, stopProcessingIfError: true)]
-                        //     )
-                        // }
+                        docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside() {
+                            xunit(
+                                testTimeMargin: '600000',
+                                thresholdMode: 1,
+                                thresholds: [failed(), skipped()],
+                                tools: [MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: "results/*.trx", skipNoTestFiles: false, stopProcessingIfError: true)]
+                            )
+                        }
 
-                        cobertura coberturaReportFile: "./results/*/*.xml"
+                        cobertura coberturaReportFile: "results/*/*.xml"
                     }
                 }
                 break
