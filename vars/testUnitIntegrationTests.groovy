@@ -16,6 +16,7 @@ void call(Map demoBuild, String demoVersion) {
     String flowName = "${demoBuild.build.flow.name}"
     Boolean runUnit = false
     Boolean runIntegration = false
+    String rununitTest = "dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
     if (demoBuild.build.testing.enabled){
         if ( unitTest.contains(env.BRANCH_NAME) ) {
             runUnit = true
@@ -30,9 +31,10 @@ void call(Map demoBuild, String demoVersion) {
             case 'dotnet':
                 if (runUnit){
                     stage('Run Unit Tests'){
-                        docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside('') {
-                            sh "dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
-                        }
+                        sh "docker run -i demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
+                        // docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside('') {
+                        //     sh "dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
+                        // }
                     }
                 }
                 if (runIntegration){
