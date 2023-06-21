@@ -32,7 +32,7 @@ void call(Map demoBuild, String demoVersion) {
                 if (runUnit){
                     stage('Run Unit Tests'){
                         sh "mkdir -p results"
-                        sh "docker run -i --rm --volume "./results:/results" demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
+                        sh "docker run -i --rm --volume './results:/results' demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
                         sh "ls -la && ls -la results"
                         // docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside("-e DOTNET_CLI_HOME='/tmp/DOTNET_CLI_HOME' -e XDG_DATA_HOME='/tmp'") {
                         //     sh "${rununitTest}"
