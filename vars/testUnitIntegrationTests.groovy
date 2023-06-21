@@ -16,7 +16,7 @@ void call(Map demoBuild, String demoVersion) {
     String flowName = "${demoBuild.build.flow.name}"
     Boolean runUnit = false
     Boolean runIntegration = false
-    String rununitTest = "dotnet test --no-build -l:trx -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --results-directory='results'"
+    String rununitTest = "dotnet test --no-build -l:trx -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --verbosity detailed --results-directory ./results"
     if (demoBuild.build.testing.enabled){
         if ( unitTest.contains(env.BRANCH_NAME) ) {
             runUnit = true
