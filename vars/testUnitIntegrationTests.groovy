@@ -10,8 +10,8 @@
 //
 //========================================================================
 void call(Map demoBuild, String demoVersion) {
-    String[] intTest = [ "develop" ]
-    String[] unitTest = ["main", "develop"]
+    String[] intTest = [ "jenkins" ]
+    String[] unitTest = ["main", "jenkins"]
     String prTests = "PR"
     String flowName = "${demoBuild.build.flow.name}"
     Boolean runUnit = false
