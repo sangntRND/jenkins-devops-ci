@@ -32,6 +32,7 @@ void call(Map demoBuild, String demoVersion) {
                 if (runUnit){
                     stage('Run Unit Tests'){
                         sh "docker run -i demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
+                        sh "ls -la"
                         // docker.image("demo/${demoBuild.name}-sdk:${demoVersion}").inside('') {
                         //     sh "dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory='./results'"
                         // }
@@ -54,7 +55,7 @@ void call(Map demoBuild, String demoVersion) {
                         //     )
                         // }
 
-                        cobertura coberturaReportFile: "results/*/*.xml"
+                        cobertura coberturaReportFile: "./results/*/*.xml"
                     }
                 }
                 break
