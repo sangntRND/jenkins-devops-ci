@@ -1,11 +1,8 @@
 #!/usr/bin/env groovy
 void call(Map demoBuild, String demoVersion) {
     // Credentials
-    String orgRegistry = 'demo'
-    String dockerHubCredential = 'dockerhub'
-    String buildRegistry = 'gitlab.simplemdg.com:5050'
     String flowName = "${demoBuild.build.flow.name}"
-    String baseImage     = "mcr.microsoft.com/dotnet/sdk"
+    String baseImage     = "demotraining.azurecr.io/source/dotnet"
     String baseTag       = "6.0"
     String demoRegistry = "demotraining.azurecr.io"
     // Variables branch
@@ -34,22 +31,26 @@ void call(Map demoBuild, String demoVersion) {
                 docker.build("demo/${demoBuild.name}-sdk:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
                 --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}") 
             }
+            stage("Run Unit Integration Tests") {
+                testUnitIntegrationTests(demoBuild, demoVersion)
+            }
+            
             stage("Publish Package") {
                 docker.build("${demoRegistry}/demo/${demoBuild.name}:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
                 --build-arg BASEIMG=demo/${demoBuild.name}-sdk --build-arg IMG_VERSION=${demoVersion} \
                 --build-arg ENTRYPOINT=${demoBuild.build.runtime.name} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
             }
     }
-    stage ('Publish Images') {
-        script {
-            pushImages(demoBuild, demoVersion)
-        }
-    }
-    stage ('Deploy to K8S') {
-        script {
-            deploytok8s(demoBuild, demoVersion)
-        }
-    }
+    // stage ('Publish Images') {
+    //     script {
+    //         pushImages(demoBuild, demoVersion)
+    //     }
+    // }
+    // stage ('Deploy to K8S') {
+    //     script {
+    //         deploytok8s(demoBuild, demoVersion)
+    //     }
+    // }
 }
 // }
 //========================================================================
