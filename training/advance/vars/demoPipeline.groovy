@@ -18,6 +18,7 @@ void call(Map pipelineParams) {
                 when {
                     allOf {
                         // Condition Check
+                        // equals expected: false, actual: params.SKIP_BUILD
                         anyOf{
                             // Branch Event: Nornal Flow
                             anyOf {
@@ -31,6 +32,9 @@ void call(Map pipelineParams) {
                             }
                         }
                     }
+                    beforeOptions true
+                    beforeInput true
+                    beforeAgent true
                 }
                 steps {
                     script {

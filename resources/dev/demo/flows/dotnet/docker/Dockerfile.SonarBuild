@@ -1,0 +1,18 @@
+ARG BASEIMG
+ARG IMG_VERSION
+FROM $BASEIMG:$IMG_VERSION as build
+COPY . .
+ARG SONAR_TOKEN
+ARG SONAR_PROJECT
+RUN dotnet tool install --global dotnet-sonarscanner \
+&& dotnet tool install --global dotnet-reportgenerator-globaltool \
+&& export PATH="$PATH:/root/.dotnet/tools"
+RUN dotnet sonarscanner begin \
+  /k:$SONAR_PROJECT \
+  /d:sonar.login=$SONAR_TOKEN \ 
+  /d:sonar.host.url=http://104.208.106.142:9000 \
+  /d:sonar.coverageReportPaths="./sonarqubecoverage/SonarQube.xml" \
+&& dotnet build -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 . \
+&& dotnet test --no-build -l:trx -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --verbosity minimal --results-directory ./results \
+&& reportgenerator "-reports:./results/*/coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube" \
+&& dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN

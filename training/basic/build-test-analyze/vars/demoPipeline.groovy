@@ -1,7 +1,5 @@
 #!/usr/bin/env groovy
 void call(Map pipelineParams) {
-    Map demoBuild = [:]
-    String demoVersion
 
     pipeline {
 
@@ -35,19 +33,17 @@ void call(Map pipelineParams) {
                 steps {
                     script {
                         echo "Testing"
-                        demoBuild = configureLoad()
-                        demoVersion = configureVersion(demoBuild)
-                        demoBuilder(demoBuild, demoVersion)
+                        dotnet()
                     }
                 }
             }
         }
 
-        // post {
-        //     cleanup {
-        //         cleanWs()
-        //     }
-        // }
+        post {
+            cleanup {
+                cleanWs()
+            }
+        }
     }
 }
 //========================================================================

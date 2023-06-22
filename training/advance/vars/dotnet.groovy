@@ -6,7 +6,6 @@ void call(Map demoBuild, String demoVersion) {
     String baseImage     = "mcr.microsoft.com/dotnet/sdk"
     String baseTag       = "6.0"
     String demoRegistry = "demotraining.azurecr.io"
-    String sonarToken = "sonar-token"
     // Variables branch
     String checkBranches = "$env.BRANCH_NAME"
     String[] deployBranches = ['main', 'jenkins']
@@ -21,7 +20,6 @@ void call(Map demoBuild, String demoVersion) {
         script {
             writeFile file: '.ci/Dockerfile.SDK', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.SDK')
             writeFile file: '.ci/Dockerfile.Runtime.API', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.Runtime.API')
-            writeFile file: '.ci/Dockerfile.Runtime.API', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.SonarBuild')
             writeFile file: '.ci/docker_entrypoint.sh', text: libraryResource('dev/demo/flows/dotnet/script/docker_entrypoint.sh')
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/aks/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/aks/service.yml')
@@ -37,15 +35,7 @@ void call(Map demoBuild, String demoVersion) {
             stage("Run Unit Integration Tests") {
                 testUnitIntegrationTests(demoBuild, demoVersion)
             }
-            stage('SonarQube analysis') {
-                script {
-                    withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
-                        docker.build("demo/${demoBuild.name}-sdk:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
-                        --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} --build-arg SONAR_PROJECT=${demoBuild.name} --build-arg SONAR_TOKEN=${SONAR_TOKEN}  
-                        ${WORKSPACE}") 
-                    }
-                }
-            }
+            
             stage("Publish Package") {
                 docker.build("${demoRegistry}/demo/${demoBuild.name}:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
                 --build-arg BASEIMG=demo/${demoBuild.name}-sdk --build-arg IMG_VERSION=${demoVersion} \
