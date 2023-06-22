@@ -7,13 +7,13 @@ FROM $BASEIMG:$IMG_VERSION as publish
 
 RUN dotnet publish -c Release --no-build --no-restore -o /app -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64
     
-FROM $RUNIMG:$RUNVER as runtime
-ARG ENTRYPOINT
+# FROM $RUNIMG:$RUNVER as runtime
+# ARG ENTRYPOINT
 
 EXPOSE 80 8080 8081
 ENV RUNTIME=$ENTRYPOINT
 WORKDIR /app
-COPY --from=publish /app .
+# COPY --from=publish /app .
 COPY ./.ci/docker_entrypoint.sh /app/docker_entrypoint.sh
 RUN chmod +x /app/docker_entrypoint.sh
 ENTRYPOINT [ "tini", "--", "/app/docker_entrypoint.sh" ]
