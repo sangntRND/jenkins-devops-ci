@@ -8,6 +8,8 @@ void call() {
     String checkBranches = "$env.BRANCH_NAME"
     String[] deployBranches = ['main', 'jenkins']
     String sonarToken = "sonar-token"
+    String demoRegistry = "demotraining.azurecr.io"
+    String acrCredential = 'acr-demo-token'
     String rununitTest = "dotnet test --no-build -l:trx -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --verbosity minimal --results-directory ./results"
 
 //========================================================================
@@ -69,6 +71,15 @@ void call() {
         docker.build("${demoRegistry}/demo/${name}:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
         --build-arg BASEIMG=demo/${name}-sdk --build-arg IMG_VERSION=${BUILD_NUMBER} \
         --build-arg ENTRYPOINT=${runtime} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
+    }
+
+    stage ("Push Docker Images") {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            docker.withRegistry("https://${demoRegistry}", acrCredential ) {
+                sh "docker login ${demoRegistry} -u ${USERNAME} -p ${PASSWORD}"
+                sh "docker push ${demoRegistry}/demo/${name}:${BUILD_NUMBER}"
+            }
+        }
     }
 }
 
