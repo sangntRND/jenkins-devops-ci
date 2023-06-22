@@ -5,9 +5,12 @@ COPY . .
 ARG SONAR_TOKEN
 ARG SONAR_PROJECT
 RUN dotnet tool install --global dotnet-sonarscanner \
-&& dotnet tool install --global dotnet-reportgenerator-globaltool
+&& dotnet tool install --global dotnet-reportgenerator-globaltool \
+&& apt update \
+&& apt install openjdk-11-jdk -y
 
-ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.dotnet/tools"
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.dotnet/tools" \
+    JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 
 RUN dotnet sonarscanner begin \
   /k:$SONAR_PROJECT \
