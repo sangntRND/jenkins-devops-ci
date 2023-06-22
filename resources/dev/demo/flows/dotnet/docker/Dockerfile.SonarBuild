@@ -5,8 +5,10 @@ COPY . .
 ARG SONAR_TOKEN
 ARG SONAR_PROJECT
 RUN dotnet tool install --global dotnet-sonarscanner \
-&& dotnet tool install --global dotnet-reportgenerator-globaltool \
-&& export PATH="$PATH:/root/.dotnet/tools"
+&& dotnet tool install --global dotnet-reportgenerator-globaltool
+
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.dotnet/tools"
+
 RUN dotnet sonarscanner begin \
   /k:$SONAR_PROJECT \
   /d:sonar.login=$SONAR_TOKEN \ 

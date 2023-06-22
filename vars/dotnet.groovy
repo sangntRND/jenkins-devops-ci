@@ -30,10 +30,10 @@ void call(Map demoBuild, String demoVersion) {
 
     switch (flowName) {
         case 'dotnet':
-            stage("Build Solution") {
-                docker.build("demo/${demoBuild.name}-sdk:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
-                --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}") 
-            }
+            // stage("Build Solution") {
+            //     docker.build("demo/${demoBuild.name}-sdk:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
+            //     --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}") 
+            // }
             // stage("Run Unit Integration Tests") {
             //     testUnitIntegrationTests(demoBuild, demoVersion)
             // }
@@ -45,11 +45,11 @@ void call(Map demoBuild, String demoVersion) {
                     }
                 }
             }
-            stage("Publish Package") {
-                docker.build("${demoRegistry}/demo/${demoBuild.name}:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
-                --build-arg BASEIMG=demo/${demoBuild.name}-sdk --build-arg IMG_VERSION=${demoVersion} \
-                --build-arg ENTRYPOINT=${demoBuild.build.runtime.name} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
-            }
+            // stage("Publish Package") {
+            //     docker.build("${demoRegistry}/demo/${demoBuild.name}:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
+            //     --build-arg BASEIMG=demo/${demoBuild.name}-sdk --build-arg IMG_VERSION=${demoVersion} \
+            //     --build-arg ENTRYPOINT=${demoBuild.build.runtime.name} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
+            // }
     }
     // stage ('Publish Images') {
     //     script {
