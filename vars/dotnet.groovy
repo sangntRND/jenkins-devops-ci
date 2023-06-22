@@ -41,8 +41,7 @@ void call(Map demoBuild, String demoVersion) {
                 script {
                     withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
                         docker.build("demo/${demoBuild.name}-sdk:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
-                        --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} --build-arg SONAR_PROJECT=${demoBuild.name} --build-arg SONAR_TOKEN=${SONAR_TOKEN}  
-                        ${WORKSPACE}") 
+                        --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} --build-arg SONAR_PROJECT=${demoBuild.name} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
                     }
                 }
             }
