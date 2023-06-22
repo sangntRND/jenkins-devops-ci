@@ -31,7 +31,7 @@ void call(Map demoBuild, String demoVersion) {
             case 'dotnet':
                 if (runUnit){
                     stage('Run Unit Tests'){
-                        sh "mkdir -p results"
+                        sh "rm -rf results; mkdir -p results"
                         sh "docker run -i --rm --volume './results:/results' demo/${demoBuild.name}-sdk:${demoVersion} $rununitTest"
                     }
                 }
