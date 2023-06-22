@@ -3,4 +3,5 @@ ARG IMG_VERSION
 FROM $BASEIMG:$IMG_VERSION as build
 WORKDIR /src
 COPY . .
-RUN dotnet build -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 .
+RUN dotnet build -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 . \
+    && chown -R 987:981 /src

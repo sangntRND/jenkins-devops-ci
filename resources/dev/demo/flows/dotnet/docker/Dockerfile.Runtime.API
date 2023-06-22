@@ -16,4 +16,4 @@ WORKDIR /app
 # COPY --from=publish /app .
 COPY ./.ci/docker_entrypoint.sh /app/docker_entrypoint.sh
 RUN chmod +x /app/docker_entrypoint.sh
-ENTRYPOINT [ "tini", "--", "/app/docker_entrypoint.sh" ]
+ENTRYPOINT ["dotnet", "BookStore.API.dll"]
