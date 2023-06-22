@@ -34,9 +34,9 @@ void call(Map demoBuild, String demoVersion) {
                 docker.build("demo/${demoBuild.name}-sdk:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
                 --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}") 
             }
-            stage("Run Unit Integration Tests") {
-                testUnitIntegrationTests(demoBuild, demoVersion)
-            }
+            // stage("Run Unit Integration Tests") {
+            //     testUnitIntegrationTests(demoBuild, demoVersion)
+            // }
             stage('SonarQube analysis') {
                 script {
                     withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {

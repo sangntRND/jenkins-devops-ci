@@ -13,6 +13,6 @@ RUN dotnet sonarscanner begin \
   /d:sonar.host.url=http://104.208.106.142:9000 \
   /d:sonar.coverageReportPaths="./sonarqubecoverage/SonarQube.xml" \
 && dotnet build -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 . \
-&& dotnet test --no-build -l:trx -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --verbosity minimal --results-directory ./results \
+&& dotnet test --no-build -c Release -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64 --collect:'XPlat Code Coverage' --verbosity minimal --results-directory ./results \
 && reportgenerator "-reports:./results/*/coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube" \
 && dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
