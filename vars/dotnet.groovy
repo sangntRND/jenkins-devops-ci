@@ -39,7 +39,7 @@ void call(Map demoBuild, String demoVersion) {
             // }
             stage('SonarQube analysis') {
                 script {
-                    withSonarQubeEnv(credentialsId: 'sonarwh') {
+                    withSonarQubeEnv(credentialsId: sonarToken) {
                         withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
                             docker.build("demo/${demoBuild.name}-sdk:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
                             --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} --build-arg SONAR_PROJECT=${demoBuild.name} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
@@ -48,12 +48,8 @@ void call(Map demoBuild, String demoVersion) {
                 }
             }
             stage("Quality Gate"){
-                timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
-                    waitForQualityGate(webhookSecretId: 'sonarwh')  
-                    // def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
-                    // if (qg.status != 'OK') {
-                    // error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                    // }
+                steps {
+                    waitForQualityGate abortPipeline: true
                 }
             }
             // stage("Publish Package") {
