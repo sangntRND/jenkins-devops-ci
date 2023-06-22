@@ -33,7 +33,7 @@ void call() {
 
     stage ('Run Unit Tests') {
         sh "mkdir -p results"
-        sh "docker run -i --rm --volume './results:/app/results' demo/${name}-sdk:${BUILD_NUMBER} $rununitTest"
+        sh "docker run -i --rm --volume './results:/src/results' demo/${name}-sdk:${BUILD_NUMBER} $rununitTest"
     }
 
     stage ('Run Integration Tests') {
