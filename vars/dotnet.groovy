@@ -45,6 +45,15 @@ void call(Map demoBuild, String demoVersion) {
                     }
                 }
             }
+            stage("Quality Gate"){
+                timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
+                    waitForQualityGate(webhookSecretId: 'sonarwh')  
+                    // def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+                    // if (qg.status != 'OK') {
+                    // error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+            }
             // stage("Publish Package") {
             //     docker.build("${demoRegistry}/demo/${demoBuild.name}:${demoVersion}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
             //     --build-arg BASEIMG=demo/${demoBuild.name}-sdk --build-arg IMG_VERSION=${demoVersion} \
