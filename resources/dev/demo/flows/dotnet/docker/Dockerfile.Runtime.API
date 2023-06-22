@@ -5,7 +5,8 @@ ARG RUNVER
 
 FROM $BASEIMG:$IMG_VERSION as publish
 
-RUN dotnet publish -c Release --no-build --no-restore -o /app -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64
+ARG PUBLISH_PROJ
+RUN dotnet publish ${PUBLISH_PROJ} -c Release --no-build --no-restore -o /app -p:DOTNET_RUNTIME_IDENTIFIER=linux-x64
     
 # FROM $RUNIMG:$RUNVER as runtime
 # ARG ENTRYPOINT

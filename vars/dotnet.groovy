@@ -2,6 +2,7 @@
 void call() {
     String name = "bookstore"
     String runtime = "BookStore.API.dll"
+    String publishProject = "src/BookStore.API/BookStore.API.csproj"
     String baseImage     = "mcr.microsoft.com/dotnet/sdk"
     String baseTag       = "6.0"
     String demoRegistry = "demotraining.azurecr.io"
@@ -71,7 +72,7 @@ void call() {
     stage ("Publish Package") {
         docker.build("${demoRegistry}/demo/${name}:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
         --build-arg BASEIMG=demo/${name}-sdk --build-arg IMG_VERSION=${BUILD_NUMBER} \
-        --build-arg ENTRYPOINT=${runtime} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
+        --build-arg ENTRYPOINT=${runtime} --build-arg PUBLISH_PROJ=${publishProject} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
     }
 
     stage ("Push Docker Images") {
