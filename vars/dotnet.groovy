@@ -48,7 +48,7 @@ void call(Map demoBuild, String demoVersion) {
                 }
             }
             stage("Quality Gate"){
-                steps {
+                script {
                     waitForQualityGate abortPipeline: true
                 }
             }
