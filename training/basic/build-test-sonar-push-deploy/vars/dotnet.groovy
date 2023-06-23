@@ -6,8 +6,6 @@ void call() {
     String baseImage     = "mcr.microsoft.com/dotnet/sdk"
     String baseTag       = "6.0"
     String demoRegistry = "demotraining.azurecr.io"
-    String checkBranches = "$env.BRANCH_NAME"
-    String[] deployBranches = ['main', 'jenkins']
     String sonarToken = "sonar-token"
     String acrCredential = 'acr-demo-token'
     String k8sCredential = 'akstest'
@@ -37,8 +35,7 @@ void call() {
     }
 
     stage ('Run Unit Tests') {
-        sh "mkdir -p results"
-        sh "docker run -i --rm --volume './results:/src/results' demo/${name}-sdk:${BUILD_NUMBER} $rununitTest"
+        sh "mkdir -p results; docker run -i --rm --volume './results:/src/results' demo/${name}-sdk:${BUILD_NUMBER} $rununitTest"
     }
 
     stage ('Run Integration Tests') {
