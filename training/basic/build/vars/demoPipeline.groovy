@@ -32,7 +32,6 @@ void call(Map pipelineParams) {
                 }
                 steps {
                     script {
-                        echo "Testing"
                         dotnet()
                     }
                 }
