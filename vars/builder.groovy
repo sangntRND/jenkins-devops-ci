@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 // A switch statement.
-void call(Map demoBuild, String flow) {
+void call(String flow) {
     switch (flow) {
             case 'api':
                 echo "api"
