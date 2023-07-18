@@ -1,6 +1,14 @@
 #!/usr/bin/env groovy
 void call(Map pipelineParams) {
 
+    String flow = "${env.JOB_NAME}".split('/')[-2].split('%2F')[-1]
+    String checkBranches = "$env.BRANCH_NAME"
+    // String jobName = "${env.JOB_NAME}".split('/')[-2].split('%2F')[-1].split('_')[1]
+
+//========================================================================
+
+//========================================================================
+
     pipeline {
 
         agent any
@@ -32,7 +40,9 @@ void call(Map pipelineParams) {
                 }
                 steps {
                     script {
-                        dotnet()
+                        echo "$flow"
+                        echo "${env.JOB_NAME}"    
+                        // dotnet()
                     }
                 }
             }
