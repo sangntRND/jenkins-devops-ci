@@ -1,12 +1,14 @@
 #!/usr/bin/env groovy
 // A switch statement.
-void call(String flow) {
+void call(String flow, String projectName) {
     switch (flow) {
             case 'api':
-                echo "api"
+                echo "$flow"
+                echo "$projectName"
+                // dotnet()
             break
             case 'frontend':
-                echo "frontend"
+                react()
             break
             default:
                 // no case build

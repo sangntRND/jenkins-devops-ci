@@ -1,9 +1,8 @@
 #!/usr/bin/env groovy
 void call(Map pipelineParams) {
-    Map demoBuild = [:]
     String flow = "${env.JOB_NAME}".split('/')[-2].split('%2F')[-1].split('-')[1]
+    String projectName = "${env.JOB_NAME}".split('/')[-2].split('%2F')[-1]
     String checkBranches = "$env.BRANCH_NAME"
-    // String jobName = "${env.JOB_NAME}".split('/')[-2].split('%2F')[-1].split('_')[1]
 
 //========================================================================
 
@@ -40,9 +39,8 @@ void call(Map pipelineParams) {
                 }
                 steps {
                     script {
-                        echo "$flow"
-                        echo "${env.JOB_NAME}"    
-                        builder(flow)
+                        echo "$flow" 
+                        builder(flow, projectName)
                     }
                 }
             }
