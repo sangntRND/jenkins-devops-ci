@@ -5,7 +5,7 @@ void call(String flow, String projectName) {
             case 'api':
                 echo "$flow"
                 echo "$projectName"
-                // dotnet()
+                dotnet(flow, projectName)
             break
             case 'frontend':
                 react()
