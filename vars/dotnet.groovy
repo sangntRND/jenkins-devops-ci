@@ -11,6 +11,7 @@ void call() {
     String acrCredential = 'acr-demo-token'
     String k8sCredential = 'akstest'
     String namespace = "demo"
+    String containerName = "jenkins"
     String rununitTest = "dotnet test --no-build -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
 
 //========================================================================
@@ -31,7 +32,7 @@ void call() {
     }
 
     stage ("Build Solution") {
-        docker.build("jenkins/${projectName}-sdk:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
+        docker.build("${containerName}/${projectName}-sdk:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
         --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}") 
     }
 
@@ -45,7 +46,7 @@ void call() {
     }
 
     stage ('Process Test Results') {
-        docker.image("jenkins/${projectName}-sdk:${BUILD_NUMBER}").inside() {
+        docker.image("${containerName}/${projectName}-sdk:${BUILD_NUMBER}").inside() {
             xunit(
                 testTimeMargin: '600000',
                 thresholdMode: 1,
@@ -61,7 +62,7 @@ void call() {
     //     script {
     //         withSonarQubeEnv(credentialsId: sonarToken) {
     //             withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
-    //                 docker.build("jenkins/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
+    //                 docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
     //                 --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
     //             }
     //         }
@@ -71,8 +72,8 @@ void call() {
     stage ("Build Docker Images Run Time") {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                docker.build("${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
-                --build-arg BASEIMG=jenkins/${projectName}-sdk --build-arg IMG_VERSION=${BUILD_NUMBER} \
+                docker.build("${demoRegistry}/${containerName}/${projectName}:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
+                --build-arg BASEIMG=${containerName}/${projectName}-sdk --build-arg IMG_VERSION=${BUILD_NUMBER} \
                 --build-arg ENTRYPOINT=${runtime} --build-arg PUBLISH_PROJ=${publishProject} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
             }
         }
@@ -81,7 +82,7 @@ void call() {
     stage ("Push Docker Images") {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                sh "docker push ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
+                sh "docker push ${demoRegistry}/${containerName}/${projectName}:${BUILD_NUMBER}"
             }
         }
     }
