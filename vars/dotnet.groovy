@@ -74,6 +74,7 @@ void call() {
                 --build-arg BASEIMG=jenkins/${projectName}-sdk --build-arg IMG_VERSION=${BUILD_NUMBER} \
                 --build-arg ENTRYPOINT=${runtime} --build-arg PUBLISH_PROJ=${publishProject} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
             }
+        }
     }
 
     stage ("Push Docker Images") {
