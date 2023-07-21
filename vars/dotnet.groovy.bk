@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-void call() {
+void call(String flow, String projectName) {
     String runtime = "Microsoft.DSX.ProjectTemplate.API"
     String publishProject = "src/BookStore.API/BookStore.API.csproj"
     String baseImage     = "nttraining.azurecr.io/source/dotnet/sdk"
@@ -30,7 +30,7 @@ void call() {
     }
 
     stage ("Build Solution") {
-        docker.build("jenkins/${projectName}-sdk:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
+        docker.build("demo/${projectName}-sdk:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
         --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}") 
     }
 
@@ -44,7 +44,7 @@ void call() {
     }
 
     stage ('Process Test Results') {
-        docker.image("jenkins/${projectName}-sdk:${BUILD_NUMBER}").inside() {
+        docker.image("demo/${projectName}-sdk:${BUILD_NUMBER}").inside() {
             xunit(
                 testTimeMargin: '600000',
                 thresholdMode: 1,
@@ -56,41 +56,39 @@ void call() {
         cobertura coberturaReportFile: "results/*/*.xml"
     }
 
-    // stage('SonarQube analysis') {
-    //     script {
-    //         withSonarQubeEnv(credentialsId: sonarToken) {
-    //             withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
-    //                 docker.build("jenkins/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
-    //                 --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
-    //             }
-    //         }
-    //     }
-    // }
-
-    stage ("Build Docker Images Run Time") {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                docker.build("${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
-                --build-arg BASEIMG=jenkins/${projectName}-sdk --build-arg IMG_VERSION=${BUILD_NUMBER} \
-                --build-arg ENTRYPOINT=${runtime} --build-arg PUBLISH_PROJ=${publishProject} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
+    stage('SonarQube analysis') {
+        script {
+            withSonarQubeEnv(credentialsId: sonarToken) {
+                withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
+                    docker.build("demo/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
+                    --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
+                }
             }
+        }
+    }
+
+    stage ("Publish Package") {
+        docker.build("${demoRegistry}/demo/${projectName}:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.Runtime.API \
+        --build-arg BASEIMG=demo/${projectName}-sdk --build-arg IMG_VERSION=${BUILD_NUMBER} \
+        --build-arg ENTRYPOINT=${runtime} --build-arg PUBLISH_PROJ=${publishProject} --build-arg RUNIMG=${baseImage} --build-arg RUNVER=${baseTag} .")
     }
 
     stage ("Push Docker Images") {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                sh "docker push ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
+                sh "docker login ${demoRegistry} -u ${USERNAME} -p ${PASSWORD}"
+                sh "docker push ${demoRegistry}/demo/${projectName}:${BUILD_NUMBER}"
             }
         }
     }
-    // stage ("Deploy To K8S") {
-    //     kubeconfig(credentialsId: 'akstest', serverUrl: '') {
-    //         sh "export registry=${demoRegistry}; export appname=${projectName}; export tag=${BUILD_NUMBER}; \
-    //         envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
-    //         sh "kubectl apply -f deployment.yml -n ${namespace}"
-    //         sh "kubectl apply -f service.yml -n ${namespace}"
-    //     }
-    // }
+    stage ("Deploy To K8S") {
+        kubeconfig(credentialsId: 'akstest', serverUrl: '') {
+            sh "export registry=${demoRegistry}; export appname=${projectName}; export tag=${BUILD_NUMBER}; \
+            envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
+            sh "kubectl apply -f deployment.yml -n ${namespace}"
+            sh "kubectl apply -f service.yml -n ${namespace}"
+        }
+    }
 }
 
 //========================================================================
