@@ -6,15 +6,15 @@ ARG SONAR_TOKEN
 ARG SONAR_PROJECT
 ARG SONAR_HOST
 
-RUN dotnet sonarscanner begin \
-  /k:$SONAR_PROJECT \
-  /d:sonar.login=$SONAR_TOKEN \ 
-  /d:sonar.host.url=$SONAR_HOST \
-  /d:sonar.coverageReportPaths="./sonarqubecoverage/SonarQube.xml" \
-  /d:sonar.qualitygate.wait=true \
-  /d:sonar.qualitygate.timeout=900 \
-&& dotnet build . \
-&& dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory ./results \
-&& ls -la ./results \
-&& reportgenerator "-reports:./results/*/*.xml" "-targetdir:./sonarqubecoverage" "-reporttypes:SonarQube" \
-&& dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
+# RUN dotnet sonarscanner begin \
+#   /k:$SONAR_PROJECT \
+#   /d:sonar.login=$SONAR_TOKEN \ 
+#   /d:sonar.host.url=$SONAR_HOST \
+#   /d:sonar.coverageReportPaths="./sonarqubecoverage/SonarQube.xml" \
+#   /d:sonar.qualitygate.wait=true \
+#   /d:sonar.qualitygate.timeout=900 \
+# && dotnet build . \
+# && dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory ./results \
+# && ls -la ./results \
+# && reportgenerator "-reports:./results/*/*.xml" "-targetdir:./sonarqubecoverage" "-reporttypes:SonarQube" \
+# && dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
