@@ -4,11 +4,12 @@ FROM $BASEIMG:$IMG_VERSION as build
 COPY . .
 ARG SONAR_TOKEN
 ARG SONAR_PROJECT
+ARG SONAR_HOST
 
 RUN dotnet sonarscanner begin \
   /k:$SONAR_PROJECT \
   /d:sonar.login=$SONAR_TOKEN \ 
-  /d:sonar.host.url=http://104.208.106.142:9000 \
+  /d:sonar.host.url=$SONAR_HOST \
   /d:sonar.coverageReportPaths="./sonarqubecoverage/SonarQube.xml" \
   /d:sonar.qualitygate.wait=true \
   /d:sonar.qualitygate.timeout=900 \

@@ -9,6 +9,7 @@ void call() {
     String baseSonarTag  = "6.0.411-sonarqube"
     String demoRegistry = "nttraining.azurecr.io"
     String sonarToken = "sonar-token"
+    String sonarHost = "http://104.208.75.216:9000"
     String acrCredential = 'acr-demo-token'
     String k8sCredential = 'akstest'
     String k8scontextName = "nttraining"
@@ -68,16 +69,16 @@ void call() {
         cobertura coberturaReportFile: "results/*/*.xml"
     }
 
-    // stage('SonarQube analysis') {
-    //     script {
-    //         withSonarQubeEnv(credentialsId: sonarToken) {
-    //             withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
-    //                 docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
-    //                 --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
-    //             }
-    //         }
-    //     }
-    // }
+    stage('SonarQube analysis') {
+        script {
+            withSonarQubeEnv(credentialsId: sonarToken) {
+                withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
+                    docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
+                    --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} -build-arg SONAR_HOST=${sonarHost} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
+                }
+            }
+        }
+    }
 
     stage ("Build Docker Images Run Time") {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
