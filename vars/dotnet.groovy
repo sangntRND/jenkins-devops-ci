@@ -3,6 +3,7 @@ void call() {
     String projectName = "projecttemplate-api"
     String runtime = "Microsoft.DSX.ProjectTemplate.API"
     String publishProject = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API/Microsoft.DSX.ProjectTemplate.API.csproj"
+    String csprojpath = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API"
     String baseImage     = "nttraining.azurecr.io/source/dotnet/sdk"
     String baseTag       = "6.0.411-jammy"
     String baseSonarTag  = "6.0.411-sonarqube"
@@ -14,6 +15,9 @@ void call() {
     String namespace = "demo"
     String containerName = "jenkins"
     String rununitTest = "dotnet test --no-build --no-restore -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
+    String server = "nttraining.database.windows.net"
+    String user = "nttraining"
+    String database = "projecttemplate"
 
 //========================================================================
 //========================================================================
@@ -29,6 +33,10 @@ void call() {
             writeFile file: '.ci/docker_entrypoint.sh', text: libraryResource('dev/demo/flows/dotnet/script/docker_entrypoint.sh')
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/be/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/be/service.yml')
+            withCredentials([string(credentialsId: 'dbpasswd', variable: 'dbpasswd')]) {
+                sh "export Server=${server}; export User=${user}; export Database=${database}; export Password=${dbpasswd}; \
+                envsubst < ${csprojpath}/appsettings.jenkins.json > ${csprojpath}/appsettings.json; cat ${csprojpath}/appsettings.json"
+            }
         }
     }
 
