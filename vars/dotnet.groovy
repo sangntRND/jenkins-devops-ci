@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 void call() {
+    String projectName = "projecttemplate-api"
     String runtime = "Microsoft.DSX.ProjectTemplate.API"
     String publishProject = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API/Microsoft.DSX.ProjectTemplate.API.csproj"
     String baseImage     = "nttraining.azurecr.io/source/dotnet/sdk"
