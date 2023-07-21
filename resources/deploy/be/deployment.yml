@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: #{projectname}#
+  name: ${projectname}
   labels:
-    app: #{projectname}#
+    app: ${projectname}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: #{projectname}#
+      app: ${projectname}
   template:
     metadata:
       labels:
-        app: #{projectname}#
+        app: ${projectname}
     spec:
       containers:
-      - name: #{projectname}#
-        image: #{acrUrl}#/#{containerName}#/#{projectname}#:#{tag}#
+      - name: ${projectname}
+        image: ${acrUrl}/${containerName}/${projectname}:${tag}
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

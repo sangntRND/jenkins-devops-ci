@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: #{projectname}#
+  name: ${projectname}
   labels:
-    app: #{projectname}#
+    app: ${projectname}
 spec:
   selector:
-    app: #{projectname}#
+    app: ${projectname}
 
   ports:
     - port: 80
