@@ -15,5 +15,8 @@ RUN dotnet sonarscanner begin \
   /d:sonar.qualitygate.timeout=900 \
 && dotnet build . \
 && dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory ./results \
+&& ls -la ./results \
+&& pwd && ls -la \
+&& reportgenerator \
 && reportgenerator "-reports:./results/*/*.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube" \
 && dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
