@@ -12,7 +12,7 @@ void call() {
     String k8sCredential = 'akstest'
     String namespace = "demo"
     String containerName = "jenkins"
-    String rununitTest = "dotnet test --no-build -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
+    String rununitTest = "dotnet test --no-build --no-restore -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
 
 //========================================================================
 //========================================================================
@@ -43,6 +43,7 @@ void call() {
 
     stage ('Run Integration Tests') {
         echo "Run Integration Tests"
+        sh "ls -la ./results"
     }
 
     stage ('Process Test Results') {
@@ -55,7 +56,7 @@ void call() {
             )
         }
 
-        cobertura coberturaReportFile: "results/*/*.xml"
+        // cobertura coberturaReportFile: "results/*/*.xml"
     }
 
     // stage('SonarQube analysis') {
