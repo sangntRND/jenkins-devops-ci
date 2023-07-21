@@ -8,7 +8,7 @@ FROM $BASEIMG:$IMG_VERSION as publish
 ARG PUBLISH_PROJ
 RUN dotnet publish ${PUBLISH_PROJ} --no-build --no-restore -o /app
     
-# FROM $RUNIMG:$RUNVER as runtime
+FROM $RUNIMG:$RUNVER as runtime
 ARG ENTRYPOINT
 
 ENV ASPNETCORE_URLS="http://+:8080" \
