@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 void call() {
     String runtime = "Microsoft.DSX.ProjectTemplate.API"
-    String publishProject = "src/BookStore.API/BookStore.API.csproj"
+    String publishProject = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API/Microsoft.DSX.ProjectTemplate.API.csproj"
     String baseImage     = "nttraining.azurecr.io/source/dotnet/sdk"
     String baseTag       = "6.0.411-jammy"
     String baseSonarTag  = "6.0.411-sonarqube"
