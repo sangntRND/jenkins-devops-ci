@@ -87,14 +87,20 @@ void call() {
             }
         }
     }
-    // stage ("Deploy To K8S") {
-    //     kubeconfig(credentialsId: 'akstest', serverUrl: '') {
-    //         sh "export registry=${demoRegistry}; export appname=${projectName}; export tag=${BUILD_NUMBER}; \
-    //         envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
-    //         sh "kubectl apply -f deployment.yml -n ${namespace}"
-    //         sh "kubectl apply -f service.yml -n ${namespace}"
-    //     }
-    // }
+    stage ("Deploy To K8S") {
+        withKubeConfig( caCertificate: '',
+                        clusterName: "${k8scontextName}",
+                        contextName: "${k8scontextName}",
+                        credentialsId: "${k8sCredential}",
+                        namespace: "${namespace}",
+                        restrictKubeConfigAccess: false,
+                        serverUrl: '') {
+            sh "export acrUrl=${demoRegistry}; export containerName=${containerName}; export projectname=${projectName}; export tag=${BUILD_NUMBER}; \
+            envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
+            sh "kubectl apply -f deployment.yml"
+            sh "kubectl apply -f service.yml"
+        }
+    }
 }
 
 //========================================================================
