@@ -11,7 +11,7 @@ void call() {
     String k8scontextName = "nttraining"
     String namespace = "demo"
     String containerName = "jenkins"
-    String lbbe = "20.6.161.46"
+    String lbbe = "http://20.6.161.46:80"
 
 //========================================================================
 //========================================================================
@@ -26,8 +26,7 @@ void call() {
             writeFile file: '.ci/nginx.conf', text: libraryResource('dev/demo/flows/react/script/nginx.conf')
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/fe/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/fe/service.yml')
-            sed -i 's/REACT_APP_API_BASE=.*/REACT_APP_API_BASE=http:\/\/'"$lbbe"':80/g' .env
-            cat .env
+            sh "export REACT_APP_API_BASE=${lbbe}; envsubst < .env.jenkins > .env; cat .env"
         }
     }
 
