@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: #{projectname}#
-        image: #{acrUrl}#/#{containerName}#/#{projectname}#:#{Build.BuildId}#
+        image: #{acrUrl}#/#{containerName}#/#{projectname}#:#{tag}#
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
