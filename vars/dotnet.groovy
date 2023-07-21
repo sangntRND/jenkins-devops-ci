@@ -56,7 +56,7 @@ void call() {
             )
         }
 
-        // cobertura coberturaReportFile: "results/*/*.xml"
+        cobertura coberturaReportFile: "results/*/*.xml"
     }
 
     // stage('SonarQube analysis') {
