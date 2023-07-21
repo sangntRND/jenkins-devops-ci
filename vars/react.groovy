@@ -27,19 +27,19 @@ void call() {
 
     stage ("Run Install") {
         script {
-            npm ci
+            sh "npm ci"
         }
     }
 
     stage ('Run Build') {
         script {
-            npm run build
+            sh "npm run build"
         }
     }
 
     stage ('Run Unit Tests') {
         script {
-            npm run test
+            sh "npm run test"
         }
     }
 
