@@ -65,13 +65,8 @@ void call() {
     //     }
     // }
     stage ("Deploy To K8S") {
-        withKubeConfig( clusterName: 'nttraining',
-                        contextName: 'nttraining',
-                        credentialsId: 'akstest', 
-                        namespace: 'demo', 
-                        restrictKubeConfigAccess: false,
-                        ) {
-            sh 'kubectl get node'
+        withKubeConfig(caCertificate: '', clusterName: 'nttraining', contextName: 'nttraining', credentialsId: 'akstest', namespace: 'demo', restrictKubeConfigAccess: false, serverUrl: 'nttraining-dns-vfs8z0bf.hcp.eastasia.azmk8s.io') {
+            sh "kubectl get node"
         }
     }
 }
