@@ -10,6 +10,7 @@ void call() {
     String sonarToken = "sonar-token"
     String acrCredential = 'acr-demo-token'
     String k8sCredential = 'akstest'
+    String k8scontextName = "nttraining"
     String namespace = "demo"
     String containerName = "jenkins"
     String rununitTest = "dotnet test --no-build --no-restore -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
