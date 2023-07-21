@@ -19,7 +19,7 @@ void call() {
     stage ('Prepare Package') {
         script {
             writeFile file: '.ci/Dockerfile.ci', text: libraryResource('dev/demo/flows/react/docker/Dockerfile.ci')
-            writeFile file: 'react_init.sh', text: libraryResource('dev/demo/flows/react/script/react_init.sh')
+            writeFile file: '.ci/react_init.sh', text: libraryResource('dev/demo/flows/react/script/react_init.sh')
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/fe/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/fe/service.yml')
         }
@@ -50,7 +50,6 @@ void call() {
     stage ("Build Docker Images") {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                sh "docker login ${demoRegistry} -u ${USERNAME} -p ${PASSWORD}"
                 docker.build("${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.ci \
                 --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} .")
             }
