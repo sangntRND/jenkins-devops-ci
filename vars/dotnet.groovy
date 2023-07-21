@@ -42,8 +42,12 @@ void call() {
     }
 
     stage ("Build Solution") {
-        docker.build("${containerName}/${projectName}-sdk:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
-        --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}") 
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            docker.withRegistry("https://${demoRegistry}", acrCredential ) {
+                docker.build("${containerName}/${projectName}-sdk:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
+                --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}")
+            }
+        }
     }
 
     stage ('Run Unit Tests') {
