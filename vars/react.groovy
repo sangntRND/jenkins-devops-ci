@@ -20,6 +20,7 @@ void call() {
         script {
             writeFile file: '.ci/Dockerfile.ci', text: libraryResource('dev/demo/flows/react/docker/Dockerfile.ci')
             writeFile file: '.ci/react_init.sh', text: libraryResource('dev/demo/flows/react/script/react_init.sh')
+            writeFile file: '.ci/nginx.conf', text: libraryResource('dev/demo/flows/react/script/nginx.conf')
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/fe/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/fe/service.yml')
         }
