@@ -26,7 +26,7 @@ void call() {
             writeFile file: '.ci/nginx.conf', text: libraryResource('dev/demo/flows/react/script/nginx.conf')
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/fe/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/fe/service.yml')
-            sed -i 's/REACT_APP_API_BASE=.*/REACT_APP_API_BASE='"$lbbe"'/g' .env
+            sed -i 's/REACT_APP_API_BASE=.*/REACT_APP_API_BASE=http:\/\/'"$lbbe"':80/g' .env
             cat .env
         }
     }
