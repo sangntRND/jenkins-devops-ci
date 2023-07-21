@@ -35,17 +35,18 @@ void call(Map pipelineParams) {
                 }
                 steps {
                     script {
-                        dotnet()
+                        echo "test"
+                        // dotnet()
                     }
                 }
             }
         }
 
-        // post {
-        //     cleanup {
-        //         cleanWs()
-        //     }
-        // }
+        post {
+            cleanup {
+                cleanWs()
+            }
+        }
     }
 }
 //========================================================================
