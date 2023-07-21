@@ -71,11 +71,9 @@ void call() {
 
     stage('SonarQube analysis') {
         script {
-            withSonarQubeEnv(credentialsId: sonarToken) {
-                withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
-                    docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
-                    --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} -build-arg SONAR_HOST=${sonarHost} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
-                }
+            withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
+                docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
+                --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} -build-arg SONAR_HOST=${sonarHost} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
             }
         }
     }
