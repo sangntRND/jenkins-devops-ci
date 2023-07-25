@@ -14,7 +14,7 @@ void call() {
     String lbbe = "http://20.6.161.46:80"
 
     String checkBranches = "$env.BRANCH_NAME"
-    String [] deployBranches = "main, stage, develop"
+    String [] deployBranches = "main, stage, develop, jenkins"
 //========================================================================
 //========================================================================
 
@@ -23,8 +23,8 @@ void call() {
 
     switch (checkBranches){
         case 'main':
-            String k8sCredential = "aksprod"
-            String k8scontextName = 'nttrainingprod'
+            String k8sCredential = "akstest"
+            String k8scontextName = 'nttraining'
             String namespace = "demo"
         break
         case 'stage':
@@ -88,20 +88,20 @@ void call() {
                 }
             }
         }
-        // stage ("Deploy To K8S") {
-        //     withKubeConfig( caCertificate: '',
-        //                     clusterName: "${k8scontextName}",
-        //                     contextName: "${k8scontextName}",
-        //                     credentialsId: "${k8sCredential}",
-        //                     namespace: "${namespace}",
-        //                     restrictKubeConfigAccess: false,
-        //                     serverUrl: '') {
-        //         sh "export acrUrl=${demoRegistry}; export containerName=${containerName}; export projectname=${projectName}; export tag=${BUILD_NUMBER}; \
-        //         envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
-        //         sh "kubectl apply -f deployment.yml"
-        //         sh "kubectl apply -f service.yml"
-        //     }
-        // }
+        stage ("Deploy To K8S") {
+            withKubeConfig( caCertificate: '',
+                            clusterName: "${k8scontextName}",
+                            contextName: "${k8scontextName}",
+                            credentialsId: "${k8sCredential}",
+                            namespace: "${namespace}",
+                            restrictKubeConfigAccess: false,
+                            serverUrl: '') {
+                sh "export acrUrl=${demoRegistry}; export containerName=${containerName}; export projectname=${projectName}; export tag=${BUILD_NUMBER}; \
+                envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
+                sh "kubectl apply -f deployment.yml"
+                sh "kubectl apply -f service.yml"
+            }
+        }
     }
 
 
