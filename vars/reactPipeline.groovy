@@ -29,6 +29,7 @@ void call(Map pipelineParams) {
                             anyOf {
                                 branch 'main'
                                 branch 'jenkins'
+                                branch 'PR*'
                             }
                             // Manual Run: Only if checked.
                             allOf{
