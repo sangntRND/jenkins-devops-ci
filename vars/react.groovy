@@ -14,7 +14,7 @@ void call() {
     String lbbe = "http://20.6.161.46:80"
 
     String checkBranches = "$env.BRANCH_NAME"
-    String [] deployBranches = "main, stage, develop, jenkins"
+    String[] deployBranches = ['main', 'stage', 'develop', 'jenkins']
 //========================================================================
 //========================================================================
 
