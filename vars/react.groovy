@@ -22,17 +22,17 @@ void call() {
 //========================================================================
 
     switch (checkBranches){
-        case 'main'
+        case 'main':
             String k8sCredential = "aksprod"
             String k8scontextName = 'nttrainingprod'
             String namespace = "prod"
         break
-        case 'stage'
+        case 'stage':
             String k8sCredential = "aksstage"
             String k8scontextName = 'nttrainingstage'
             String namespace = "stage"
         break
-        case 'develop'
+        case 'develop':
             String k8sCredential = "akstest"
             String k8scontextName = 'nttraining'
             String namespace = "test"
