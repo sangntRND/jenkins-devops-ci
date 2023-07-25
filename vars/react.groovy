@@ -12,7 +12,9 @@ void call() {
     // String namespace = "demo"
     String containerName = "jenkins"
     String lbbe = "http://20.6.161.46:80"
-
+    String k8sCredential = "akstest"
+    String k8scontextName = "k8scontextName"
+    String namespace = "demo"
     String checkBranches = "$env.BRANCH_NAME"
     String[] deployBranches = ['main', 'stage', 'develop', 'jenkins']
 //========================================================================
@@ -21,23 +23,23 @@ void call() {
 //========================================================================
 //========================================================================
 
-    switch (checkBranches){
-        case 'main':
-            String k8sCredential = "akstest"
-            String k8scontextName = 'nttraining'
-            String namespace = "demo"
-        break
-        case 'stage':
-            String k8sCredential = "aksstage"
-            String k8scontextName = 'nttrainingstage'
-            String namespace = "demo"
-        break
-        case 'develop':
-            String k8sCredential = "akstest"
-            String k8scontextName = 'nttraining'
-            String namespace = "demo"
-        break
-    }
+    // switch (checkBranches){
+    //     case 'main':
+    //         String k8sCredential = "akstest"
+    //         String k8scontextName = "k8scontextName"
+    //         String namespace = "demo"
+    //     break
+    //     case 'stage':
+    //         String k8sCredential = "aksstage"
+    //         String k8scontextName = "nttrainingstage"
+    //         String namespace = "demo"
+    //     break
+    //     case 'develop':
+    //         String k8sCredential = "akstest"
+    //         String k8scontextName = "nttraining"
+    //         String namespace = "demo"
+    //     break
+    // }
 
     stage ('Prepare Package') {
         script {
