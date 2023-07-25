@@ -9,7 +9,7 @@ void call() {
     String acrCredential = "acr-demo-token"
     // String k8sCredential = "akstest"
     // String k8scontextName = "nttraining"
-    String namespace = "demo"
+    // String namespace = "demo"
     String containerName = "jenkins"
     String lbbe = "http://20.6.161.46:80"
 
