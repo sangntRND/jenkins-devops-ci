@@ -54,7 +54,7 @@ void call() {
 
     stage ("Trivy Scan Secret") {
         script {
-            sh "trivy fs . --scanners secret,conf"
+            sh "trivy fs . --scanners secret,config"
         }
     }
 
@@ -105,7 +105,7 @@ void call() {
         }
 
         stage ("Trivy Scan Docker Images") {
-            sh "trivy image --scanners vuln,conf --exit-code 1 --severity CRITICAL ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
+            sh "trivy image --scanners vuln,config --exit-code 1 --severity CRITICAL ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
         }
 
         stage ("Push Docker Images") {
