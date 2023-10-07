@@ -86,13 +86,13 @@ void call() {
         stage ('Run Integration Tests') {
             echo "Run Integration Tests"
         }
+
         stage ("Trivy Scan Base Images") {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                    trivy image --exit-code 1 --severity CRITICAL ${baseImage}:${baseTag}
-                }
+                trivy image --exit-code 1 --severity CRITICAL ${baseImage}:${baseTag}
             }
         }
+
         // stage ("Build Docker Images") {
         //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
         //         docker.withRegistry("https://${demoRegistry}", acrCredential ) {
