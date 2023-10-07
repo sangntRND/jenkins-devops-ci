@@ -89,7 +89,7 @@ void call() {
 
         stage ("Trivy Scan Base Images") {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                trivy image --exit-code 1 --severity CRITICAL ${baseImage}:${baseTag}
+                sh "trivy image --exit-code 1 --severity CRITICAL ${baseImage}:${baseTag}"
             }
         }
 
