@@ -54,7 +54,7 @@ void call() {
 
     stage ("Trivy Scan Secret") {
         script {
-            sh "trivy fs ."
+            sh "trivy fs . --scanners secret"
         }
     }
 
@@ -72,7 +72,7 @@ void call() {
 
     stage ("Trivy Scan Vulnerabilities") {
         script {
-            sh "trivy fs ."
+            sh "trivy fs . --severity HIGH,CRITICAL --scanners vuln"
         }
     }
 
