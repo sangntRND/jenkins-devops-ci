@@ -48,7 +48,7 @@ void call() {
             writeFile file: '.ci/nginx.conf', text: libraryResource('dev/demo/flows/react/script/nginx.conf')
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/fe/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/fe/service.yml')
-            sh "export REACT_APP_API_BASE=${lbbe}; envsubst < .env.jenkins > .env; cat .env"
+            // sh "export REACT_APP_API_BASE=${lbbe}; envsubst < .env.jenkins > .env; cat .env"
         }
     }
 
