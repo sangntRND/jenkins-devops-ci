@@ -1,11 +1,11 @@
 #!/usr/bin/env groovy
 void call() {
     String projectName = "projecttemplate-frontend"
-    String baseImage     = "nttraining.azurecr.io/source/node/focal"
-    String baseTag       = "node16-nginx"
-    String baseSonarTag  = "6.0.411-sonarqube"
-    String demoRegistry = "nttraining.azurecr.io"
-    String sonarToken = "sonar-token"
+    String baseImage     = "pisharpeddemo.azurecr.io/baseimages/ubuntu"
+    String baseTag       = "focal-node16-nginx"
+    // String baseSonarTag  = "6.0.411-sonarqube"
+    String demoRegistry = "pisharpeddemo.azurecr.io"
+    // String sonarToken = "sonar-token"
     String acrCredential = "acr-demo-token"
     // String k8sCredential = "akstest"
     // String k8scontextName = "nttraining"
@@ -16,7 +16,7 @@ void call() {
     String k8scontextName = "k8scontextName"
     String namespace = "demo"
     String checkBranches = "$env.BRANCH_NAME"
-    String[] deployBranches = ['main', 'stage', 'develop', 'jenkins']
+    String[] deployBranches = ['main', 'stage', 'develop', 'jenkins', 'pisharped']
 //========================================================================
 //========================================================================
 
@@ -90,25 +90,21 @@ void call() {
                 }
             }
         }
-        stage ("Deploy To K8S") {
-            withKubeConfig( caCertificate: '',
-                            clusterName: "${k8scontextName}",
-                            contextName: "${k8scontextName}",
-                            credentialsId: "${k8sCredential}",
-                            namespace: "${namespace}",
-                            restrictKubeConfigAccess: false,
-                            serverUrl: '') {
-                sh "export acrUrl=${demoRegistry}; export containerName=${containerName}; export projectname=${projectName}; export tag=${BUILD_NUMBER}; \
-                envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
-                sh "kubectl apply -f deployment.yml"
-                sh "kubectl apply -f service.yml"
-            }
-        }
+        // stage ("Deploy To K8S") {
+        //     withKubeConfig( caCertificate: '',
+        //                     clusterName: "${k8scontextName}",
+        //                     contextName: "${k8scontextName}",
+        //                     credentialsId: "${k8sCredential}",
+        //                     namespace: "${namespace}",
+        //                     restrictKubeConfigAccess: false,
+        //                     serverUrl: '') {
+        //         sh "export acrUrl=${demoRegistry}; export containerName=${containerName}; export projectname=${projectName}; export tag=${BUILD_NUMBER}; \
+        //         envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
+        //         sh "kubectl apply -f deployment.yml"
+        //         sh "kubectl apply -f service.yml"
+        //     }
+        // }
     }
-
-
-
-
 }
 
 //========================================================================
