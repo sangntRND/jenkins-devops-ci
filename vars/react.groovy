@@ -52,6 +52,12 @@ void call() {
         }
     }
 
+    stage ("Trivy Scan Secret") {
+        script {
+            sh "trivy fs ."
+        }
+    }
+
     stage ("Run Install") {
         script {
             sh "npm ci"
@@ -61,6 +67,12 @@ void call() {
     stage ('Run Build') {
         script {
             sh "npm run build"
+        }
+    }
+
+    stage ("Trivy Scan Vulnerabilities") {
+        script {
+            sh "trivy fs ."
         }
     }
 
@@ -74,22 +86,22 @@ void call() {
         stage ('Run Integration Tests') {
             echo "Run Integration Tests"
         }
-        stage ("Build Docker Images") {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                    docker.build("${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.ci \
-                    --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} .")
-                }
-            }
-        }
+        // stage ("Build Docker Images") {
+        //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+        //         docker.withRegistry("https://${demoRegistry}", acrCredential ) {
+        //             docker.build("${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.ci \
+        //             --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} .")
+        //         }
+        //     }
+        // }
 
-        stage ("Push Docker Images") {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                    sh "docker push ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
-                }
-            }
-        }
+        // stage ("Push Docker Images") {
+        //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+        //         docker.withRegistry("https://${demoRegistry}", acrCredential ) {
+        //             sh "docker push ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
+        //         }
+        //     }
+        // }
         // stage ("Deploy To K8S") {
         //     withKubeConfig( caCertificate: '',
         //                     clusterName: "${k8scontextName}",
