@@ -89,7 +89,9 @@ void call() {
 
         stage ("Trivy Scan Base Images") {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                sh "trivy image --exit-code 1 --severity CRITICAL ${baseImage}:${baseTag}"
+                docker.withRegistry("https://${demoRegistry}", acrCredential ) {
+                    sh "trivy image --exit-code 1 --severity CRITICAL ${baseImage}:${baseTag}"
+                }
             }
         }
 
