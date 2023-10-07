@@ -54,7 +54,7 @@ void call() {
 
     stage ("Trivy Scan Secret") {
         script {
-            sh "trivy fs . --scanners secret"
+            sh "trivy fs . --scanners secret,conf"
         }
     }
 
@@ -104,17 +104,15 @@ void call() {
             }
         }
 
+        stage ("Trivy Scan Docker Images") {
+            sh "trivy image --scanners vuln,conf --exit-code 1 --severity CRITICAL ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
+        }
+
         stage ("Push Docker Images") {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                 docker.withRegistry("https://${demoRegistry}", acrCredential ) {
                     sh "docker push ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
                 }
-            }
-        }
-
-        stage ("Trivy Scan Docker Images") {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                sh "trivy image --exit-code 1 --severity CRITICAL ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
             }
         }
 
