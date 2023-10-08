@@ -4,10 +4,10 @@ void call() {
     String runtime = "Microsoft.DSX.ProjectTemplate.API"
     String publishProject = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API/Microsoft.DSX.ProjectTemplate.API.csproj"
     String csprojpath = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API"
-    String baseImage     = "nttraining.azurecr.io/source/dotnet/sdk"
-    String baseTag       = "6.0.411-jammy"
+    String baseImage     = "pisharpeddemo.azurecr.io/baseimages/ubuntu"
+    String baseTag       = "jammy-dotnet-sdk-6.0.414"
     String baseSonarTag  = "6.0.411-sonarqube"
-    String demoRegistry = "nttraining.azurecr.io"
+    String demoRegistry = "pisharpeddemo.azurecr.io"
     String sonarToken = "sonar-token"
     String sonarHost = "http://104.208.75.216:9000"
     String acrCredential = 'acr-demo-token'
@@ -34,10 +34,25 @@ void call() {
             writeFile file: '.ci/docker_entrypoint.sh', text: libraryResource('dev/demo/flows/dotnet/script/docker_entrypoint.sh')
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/be/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/be/service.yml')
+            writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
             withCredentials([string(credentialsId: 'dbpasswd', variable: 'dbpasswd')]) {
                 sh "export Server=${server}; export User=${user}; export Database=${database}; export Password=${dbpasswd}; \
                 envsubst < ${csprojpath}/appsettings.jenkins.json > ${csprojpath}/appsettings.json; cat ${csprojpath}/appsettings.json"
             }
+        }
+    }
+
+    stage ("Trivy Scan Secret") {
+        script {
+            sh "trivy fs . --scanners secret --format template --template @.ci/html.tpl -o .ci/secretreport.html"
+            publishHTML (target : [allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: '.ci',
+                reportFiles: 'secretreport.html',
+                reportName: 'Trivy Secrets Report',
+                reportTitles: 'Trivy Secrets Report']
+            )
         }
     }
 
@@ -47,6 +62,20 @@ void call() {
                 docker.build("${containerName}/${projectName}-sdk:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
                 --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}")
             }
+        }
+    }
+
+    stage ("Trivy Scan Vulnerabilities") {
+        script {
+            sh "trivy fs . --severity HIGH,CRITICAL --scanners vuln --format template --template @.ci/html.tpl -o .ci/vulnreport.html"
+            publishHTML (target : [allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: '.ci',
+                reportFiles: 'vulnreport.html',
+                reportName: 'Trivy Vulnerabilities Report',
+                reportTitles: 'Trivy Vulnerabilities Report']
+            )
         }
     }
 
@@ -73,14 +102,14 @@ void call() {
         cobertura coberturaReportFile: "results/*/*.xml"
     }
 
-    stage('SonarQube analysis') {
-        script {
-            withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
-                docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
-                --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} --build-arg SONAR_HOST=${sonarHost} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
-            }
-        }
-    }
+    // stage('SonarQube analysis') {
+    //     script {
+    //         withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
+    //             docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
+    //             --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} --build-arg SONAR_HOST=${sonarHost} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
+    //         }
+    //     }
+    // }
 
     stage ("Build Docker Images Run Time") {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
@@ -92,27 +121,39 @@ void call() {
         }
     }
 
-    stage ("Push Docker Images") {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                sh "docker push ${demoRegistry}/${containerName}/${projectName}:${BUILD_NUMBER}"
-            }
-        }
+    stage ("Trivy Scan Docker Images") {
+        sh "trivy image --scanners vuln,config --exit-code 0 --severity HIGH,CRITICAL --format template --template @.ci/html.tpl -o .ci/imagesreport.html ${demoRegistry}/${containerName}/${projectName}:${BUILD_NUMBER}"
+        publishHTML (target : [allowMissing: true,
+            alwaysLinkToLastBuild: true,
+            keepAll: true,
+            reportDir: '.ci',
+            reportFiles: 'imagesreport.html',
+            reportName: 'Trivy Vulnerabilities Images Report',
+            reportTitles: 'Trivy Vulnerabilities Images Report']
+        )
     }
-    stage ("Deploy To K8S") {
-        withKubeConfig( caCertificate: '',
-                        clusterName: "${k8scontextName}",
-                        contextName: "${k8scontextName}",
-                        credentialsId: "${k8sCredential}",
-                        namespace: "${namespace}",
-                        restrictKubeConfigAccess: false,
-                        serverUrl: '') {
-            sh "export acrUrl=${demoRegistry}; export containerName=${containerName}; export projectname=${projectName}; export tag=${BUILD_NUMBER}; \
-            envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
-            sh "kubectl apply -f deployment.yml"
-            sh "kubectl apply -f service.yml"
-        }
-    }
+
+    // stage ("Push Docker Images") {
+    //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+    //         docker.withRegistry("https://${demoRegistry}", acrCredential ) {
+    //             sh "docker push ${demoRegistry}/${containerName}/${projectName}:${BUILD_NUMBER}"
+    //         }
+    //     }
+    // }
+    // stage ("Deploy To K8S") {
+    //     withKubeConfig( caCertificate: '',
+    //                     clusterName: "${k8scontextName}",
+    //                     contextName: "${k8scontextName}",
+    //                     credentialsId: "${k8sCredential}",
+    //                     namespace: "${namespace}",
+    //                     restrictKubeConfigAccess: false,
+    //                     serverUrl: '') {
+    //         sh "export acrUrl=${demoRegistry}; export containerName=${containerName}; export projectname=${projectName}; export tag=${BUILD_NUMBER}; \
+    //         envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
+    //         sh "kubectl apply -f deployment.yml"
+    //         sh "kubectl apply -f service.yml"
+    //     }
+    // }
 }
 
 //========================================================================
