@@ -25,6 +25,7 @@ void call(Map pipelineParams) {
                             anyOf {
                                 branch 'main'
                                 branch 'jenkins'
+                                branch 'pisharped'
                             }
                             // Manual Run: Only if checked.
                             allOf{
