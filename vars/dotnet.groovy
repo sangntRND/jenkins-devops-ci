@@ -35,10 +35,10 @@ void call() {
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/be/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/be/service.yml')
             writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
-            withCredentials([string(credentialsId: 'dbpasswd', variable: 'dbpasswd')]) {
-                sh "export Server=${server}; export User=${user}; export Database=${database}; export Password=${dbpasswd}; \
-                envsubst < ${csprojpath}/appsettings.jenkins.json > ${csprojpath}/appsettings.json; cat ${csprojpath}/appsettings.json"
-            }
+            // withCredentials([string(credentialsId: 'dbpasswd', variable: 'dbpasswd')]) {
+            //     sh "export Server=${server}; export User=${user}; export Database=${database}; export Password=${dbpasswd}; \
+            //     envsubst < ${csprojpath}/appsettings.jenkins.json > ${csprojpath}/appsettings.json; cat ${csprojpath}/appsettings.json"
+            // }
         }
     }
 
