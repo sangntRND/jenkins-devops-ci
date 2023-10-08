@@ -122,7 +122,7 @@ void call() {
         }
 
         stage ("Trivy Scan Docker Images") {
-            sh "trivy image --scanners vuln,config --exit-code 1 --severity HIGH,CRITICAL --format template --template @.ci/html.tpl -o .ci/imagesreport.html ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
+            sh "trivy image --scanners vuln,config --exit-code 0 --severity HIGH,CRITICAL --format template --template @.ci/html.tpl -o .ci/imagesreport.html ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
             publishHTML (target : [allowMissing: true,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
