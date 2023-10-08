@@ -6,10 +6,10 @@ void call() {
     String csprojpath = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API"
     String baseImage     = "pisharpeddemo.azurecr.io/baseimages/ubuntu"
     String baseTag       = "jammy-dotnet-sdk-6.0.414"
-    String baseSonarTag  = "6.0.411-sonarqube"
+    String baseSonarTag  = "sonar"
     String demoRegistry = "pisharpeddemo.azurecr.io"
     String sonarToken = "sonar-token"
-    String sonarHost = "http://104.208.75.216:9000"
+    String sonarHost = "http://20.42.95.177:9000"
     String acrCredential = 'acr-demo-token'
     String k8sCredential = 'akstest'
     String k8scontextName = "nttraining"
@@ -65,20 +65,6 @@ void call() {
         }
     }
 
-    stage ("Trivy Scan Vulnerabilities") {
-        script {
-            sh "trivy fs . --severity HIGH,CRITICAL --scanners vuln --format template --template @.ci/html.tpl -o .ci/vulnreport.html"
-            publishHTML (target : [allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: '.ci',
-                reportFiles: 'vulnreport.html',
-                reportName: 'Trivy Vulnerabilities Report',
-                reportTitles: 'Trivy Vulnerabilities Report']
-            )
-        }
-    }
-
     stage ('Run Unit Tests') {
         sh "mkdir -p results"
         sh "docker run -i --rm --volume './results:/src/results' ${containerName}/${projectName}-sdk:${BUILD_NUMBER} $rununitTest"
@@ -102,14 +88,14 @@ void call() {
         cobertura coberturaReportFile: "results/*/*.xml"
     }
 
-    // stage('SonarQube analysis') {
-    //     script {
-    //         withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
-    //             docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
-    //             --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} --build-arg SONAR_HOST=${sonarHost} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
-    //         }
-    //     }
-    // }
+    stage('SonarQube analysis') {
+        script {
+            withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
+                docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
+                --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} --build-arg SONAR_HOST=${sonarHost} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
+            }
+        }
+    }
 
     stage ("Build Docker Images Run Time") {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
@@ -133,13 +119,13 @@ void call() {
         )
     }
 
-    // stage ("Push Docker Images") {
-    //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-    //         docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-    //             sh "docker push ${demoRegistry}/${containerName}/${projectName}:${BUILD_NUMBER}"
-    //         }
-    //     }
-    // }
+    stage ("Push Docker Images") {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            docker.withRegistry("https://${demoRegistry}", acrCredential ) {
+                sh "docker push ${demoRegistry}/${containerName}/${projectName}:${BUILD_NUMBER}"
+            }
+        }
+    }
     // stage ("Deploy To K8S") {
     //     withKubeConfig( caCertificate: '',
     //                     clusterName: "${k8scontextName}",

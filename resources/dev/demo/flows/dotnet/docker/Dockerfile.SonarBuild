@@ -6,7 +6,7 @@ ARG SONAR_TOKEN
 ARG SONAR_PROJECT
 ARG SONAR_HOST
 
-RUN dotnet sonarscanner begin \
+RUN dotnet-sonarscanner begin \
   /k:$SONAR_PROJECT \
   /d:sonar.login=$SONAR_TOKEN \ 
   /d:sonar.host.url=$SONAR_HOST \
@@ -16,4 +16,4 @@ RUN dotnet sonarscanner begin \
 && dotnet build . \
 && dotnet test --no-build --collect:'XPlat Code Coverage' --results-directory ./results \
 && reportgenerator "-reports:./results/*/*.xml" "-targetdir:ProjectTemplate/sonarqubecoverage" "-reporttypes:SonarQube" \
-&& dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
+&& dotnet-sonarscanner end /d:sonar.login=$SONAR_TOKEN
