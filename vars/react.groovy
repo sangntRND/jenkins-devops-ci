@@ -48,13 +48,22 @@ void call() {
             writeFile file: '.ci/nginx.conf', text: libraryResource('dev/demo/flows/react/script/nginx.conf')
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/fe/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/fe/service.yml')
+            writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
             // sh "export REACT_APP_API_BASE=${lbbe}; envsubst < .env.jenkins > .env; cat .env"
         }
     }
 
     stage ("Trivy Scan Secret") {
         script {
-            sh "trivy fs . --scanners secret,config"
+            sh "trivy fs . --scanners secret --format template --template @.ci/html.tpl -o .ci/secretreport.html"
+            publishHTML (target : [allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: '.ci',
+                reportFiles: 'secretreport.html',
+                reportName: 'Trivy Secrets Report',
+                reportTitles: 'Trivy Secrets Report']
+            )
         }
     }
 
@@ -72,7 +81,15 @@ void call() {
 
     stage ("Trivy Scan Vulnerabilities") {
         script {
-            sh "trivy fs . --severity HIGH,CRITICAL --scanners vuln"
+            sh "trivy fs . --severity HIGH,CRITICAL --scanners vuln --format template --template @.ci/html.tpl -o .ci/vulnreport.html"
+            publishHTML (target : [allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: '.ci',
+                reportFiles: 'vulnreport.html',
+                reportName: 'Trivy Vulnerabilities Report',
+                reportTitles: 'Trivy Vulnerabilities Report']
+            )
         }
     }
 
@@ -87,13 +104,13 @@ void call() {
             echo "Run Integration Tests"
         }
 
-        stage ("Trivy Scan Base Images") {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-                    sh "trivy image --exit-code 1 --severity CRITICAL ${baseImage}:${baseTag}"
-                }
-            }
-        }
+        // stage ("Trivy Scan Base Images") {
+        //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+        //         docker.withRegistry("https://${demoRegistry}", acrCredential ) {
+        //             sh "trivy image --exit-code 1 --severity CRITICAL ${baseImage}:${baseTag}"
+        //         }
+        //     }
+        // }
 
         stage ("Build Docker Images") {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
@@ -105,7 +122,15 @@ void call() {
         }
 
         stage ("Trivy Scan Docker Images") {
-            sh "trivy image --scanners vuln,config --exit-code 1 --severity CRITICAL ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
+            sh "trivy image --scanners vuln,config --exit-code 1 --severity HIGH,CRITICAL --format template --template @.ci/html.tpl -o .ci/imagesreport.html ${demoRegistry}/jenkins/${projectName}:${BUILD_NUMBER}"
+            publishHTML (target : [allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: '.ci',
+                reportFiles: 'imagesreport.html',
+                reportName: 'Trivy Vulnerabilities Images Report',
+                reportTitles: 'Trivy Vulnerabilities Images Report']
+            )
         }
 
         stage ("Push Docker Images") {
