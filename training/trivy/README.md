@@ -29,8 +29,10 @@ Trivy supports the following vulnerability statuses:
 - fix_deferred
 - end_of_life
 
-To ignore vulnerabilities with specific statuses, use the 
+To ignore vulnerabilities with specific statuses, use the
+
 	```--ignore-status
  	   --ignore-unfixed```
+     
 	- Ex:
 		```trivy image --ignore-status affected,fixed ruby:2.4.0```
