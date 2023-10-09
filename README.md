@@ -8,7 +8,7 @@
 # DevSecOps Project
 This is the devsecops project and will contain all automation related to CI Architecture. 
 
-	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/753caef3-0d14-4c76-a168-40385298bcb9)
+![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/753caef3-0d14-4c76-a168-40385298bcb9)
 
  
 Folder Structure
