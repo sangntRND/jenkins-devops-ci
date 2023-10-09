@@ -76,9 +76,21 @@ Folder Structure
 
 # Install Jenkins
 - Install JDK
+  	```
       sudo apt update
       sudo apt install openjdk-17-jre -y
       sudo apt install openjdk-17-jdk -y
+   	```
+- Install Jenkins
+  	```
+   	curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+   	echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+   	sudo apt-get update
+   	sudo apt-get install jenkins -y
+   	```
 # Refer
 - https://www.jenkins.io/doc/book/pipeline/shared-libraries/
 - https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli
