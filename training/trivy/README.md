@@ -48,3 +48,27 @@ Use --severity option.
 
 	trivy image --severity HIGH,CRITICAL ruby:2.4.0
 	trivy conf --severity HIGH,CRITICAL examples/misconf/mixed
+
+**By Finding IDs** (allow the CVE risk or critical or high)
+
+Trivy supports the .trivyignore and .trivyignore.yaml ignore files.
+
+.trivyignore
+
+```
+# Accept the risk
+CVE-2018-14618
+
+# Accept the risk until 2023-01-01
+CVE-2019-14697 exp:2023-01-01
+
+# No impact in our settings
+CVE-2019-1543
+
+# Ignore misconfigurations
+AVD-DS-0002
+
+# Ignore secrets
+generic-unwanted-rule
+aws-account-id
+```
