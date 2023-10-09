@@ -115,8 +115,8 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 	- manage Jenkins -> System
  		- GitHub Servers
    			- Name: github
-      			- API URL: https://api.github.com
-         		- Credentials: githubserver
+			- API URL: https://api.github.com
+			- Credentials: githubserver
            		- [x] Manage hooks   
    		- GitHub Enterprise Servers
 			- API endpoint: https://api.github.com
