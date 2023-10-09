@@ -51,9 +51,9 @@ Use --severity option.
 
 **By Finding IDs** (allow the CVE risk or critical or high)
 
-Trivy supports the .trivyignore and .trivyignore.yaml ignore files.
+Trivy supports the ```.trivyignore``` and ```.trivyignore.yaml``` ignore files.
 
-.trivyignore
+_**.trivyignore**_
 
 ```
 # Accept the risk
@@ -71,4 +71,37 @@ AVD-DS-0002
 # Ignore secrets
 generic-unwanted-rule
 aws-account-id
+```
+
+_**.trivyignore.yaml**_
+
+```
+vulnerabilities:
+  - id: CVE-2022-40897
+    paths:
+      - "usr/local/lib/python3.9/site-packages/setuptools-58.1.0.dist-info/METADATA"
+    statement: Accept the risk
+  - id: CVE-2023-2650
+  - id: CVE-2023-3446
+  - id: CVE-2023-3817
+  - id: CVE-2023-29491
+    expired_at: 2023-09-01
+
+misconfigurations:
+  - id: AVD-DS-0001
+  - id: AVD-DS-0002
+    paths:
+      - "docs/Dockerfile"
+    statement: The image needs root privileges
+
+secrets:
+  - id: aws-access-key-id
+  - id: aws-secret-access-key
+    paths:
+      - "foo/bar/aws.secret"
+
+licenses:
+  - id: GPL-3.0 # License name is used as ID
+    paths:
+      - "usr/share/gcc/python/libstdcxx/v6/__init__.py"
 ```
