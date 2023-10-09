@@ -31,8 +31,8 @@ Trivy supports the following vulnerability statuses:
 
 To ignore vulnerabilities with specific statuses, use the
 
-	```--ignore-status
- 	   --ignore-unfixed```
+	--ignore-status
+ 	   --ignore-unfixed
      
 	- Ex:
-		```trivy image --ignore-status affected,fixed ruby:2.4.0```
+		trivy image --ignore-status affected,fixed ruby:2.4.0
