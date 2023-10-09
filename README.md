@@ -1,7 +1,15 @@
       ___     ___   __   __   ___      ___    ___   
      |   \   | __|  \ \ / /  / _ \    | _ \  / __|  
      | |) |  | _|    \ V /  | (_) |   |  _/  \__ \  
-     |___/   |___|   _\_/_   \___/   _|_|_   |___/  
+     |___/   |___|   _\_/_   \___/   _|_|_   |___/ 
+
+	######  ####### #     #  #####  #######  #####  ####### ######   #####  
+	#     # #       #     # #     # #       #     # #     # #     # #     # 
+	#     # #       #     # #       #       #       #     # #     # #       
+	#     # #####   #     #  #####  #####   #       #     # ######   #####  
+	#     # #        #   #        # #       #       #     # #             # 
+	#     # #         # #   #     # #       #     # #     # #       #     # 
+	######  #######    #     #####  #######  #####  ####### #        #####  
 
 # DevOps Project
 This is the devops project and will contain all automation related to CI Architecture. 
@@ -114,22 +122,22 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
   		![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/ecec5fcf-223b-4de7-b402-0467e0d861dc) 
 	- manage Jenkins -> System
  		- GitHub Servers
-   			- Name: github
+   			- Name: ```github```
 			- API URL: https://api.github.com
-			- Credentials: githubserver
+			- Credentials: ```githubserver```
            	- [x] Manage hooks   
    		- GitHub Enterprise Servers
 			- API endpoint: https://api.github.com
 			- Name: github
 		- Global Pipeline Libraries
-			- Name: jenkins-devops-ci
-			- Default version: pisharped
+			- Name: ```jenkins-devops-ci```
+			- Default version: ```pisharped```
 			- [x] Allow default version to be overridden
 			- [x] Include @Library changes in job recent changes 
 		- Retrieval method: Modern SCM
 			- Source Code Management: Git
 			- Project Repository: https://github.com/LocTaRND/jenkins-devops-ci.git
-			- Credentials: github
+			- Credentials: ```github```
     		![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/6588341e-e645-468c-a6e7-10314b97c094)
  
 - SonarQube Server
@@ -137,20 +145,20 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
   	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/a7564c16-f262-4dc7-9491-e45a3fd68114)
 
 - Resource Group:
-	- Create resource group called: demo
+	- Create resource group called: ```demo```
 - ACR
-	- Create ACR called: pisharpeddemo 
-  	- Admin user: Enable
+	- Create ACR called: ```pisharpeddemo ```
+  	- Admin user: ```Enable```
   	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/3b68abf8-0c03-40b7-9625-ed909572462d)
 
 - SQL Server:
-	- Create SQL server called: pisharpeddemo
+	- Create SQL server called: ```pisharpeddemo```
    	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/871904a6-2352-47c1-82a1-76c5f6dbe7ee)
-	- Create database name called: projecttemplate
+	- Create database name called: ```projecttemplate```
 	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/fa5eee13-c7da-4c20-a671-c6a3b358c132)
  
 - AKS
-	- Create AKS called: demo
+	- Create AKS called: ```demo```
 	- Attach an ACR to an AKS cluster:
    		```az aks update -n demo -g demo --attach-acr pisharpeddemo```
 - Repositories:
