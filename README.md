@@ -91,6 +91,51 @@ Folder Structure
    sudo apt-get update
    sudo apt-get install jenkins -y
    	```
+# Install Docker
+```
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Add Jenkins user into docker group
+sudo usermod -aG docker jenkins
+```
+
+# Install kubectl
+```
+   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+   sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+   kubectl version --client
+```
+
+# Install Trivy
+```
+# Debian/Ubuntu 
+sudo apt-get install wget apt-transport-https gnupg lsb-release
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy
+Refer: https://aquasecurity.github.io/trivy/v0.29.2/getting-started/installation/
+```
+
+# Install Sonar
+```
+Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
+```
+
 # Refer
 - https://www.jenkins.io/doc/book/pipeline/shared-libraries/
 - https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli
