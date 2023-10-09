@@ -8,7 +8,7 @@
 # DevSecOps Project
 This is the devsecops project and will contain all automation related to CI Architecture. 
 
-	![Alt text](image.png)
+	![Alt text](./images/cicdpipelinesecurity.jpg)
 Folder Structure
  - resources - Jenkins Library Resources (External libraries may load adjunct files from a resources/ directory using the libraryResource step)
  - vars - Jenkins Libarary Scripts (Only entire pipelines can be defined in shared libraries as of this time. This can only be done in vars/*.groovy, and only in a call method. Only one Declarative Pipeline can be executed in a single build, and if you attempt to execute a second one, your build will fail as a result.)
