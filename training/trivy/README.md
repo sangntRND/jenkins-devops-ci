@@ -22,6 +22,8 @@ By default, vulnerability and secret scanning are enabled
 _**Only supported with Vulnerability Scanner**_
 
 Trivy supports the following vulnerability statuses:
+
+```
 - unknown
 - not_affected
 - affected
@@ -30,6 +32,7 @@ Trivy supports the following vulnerability statuses:
 - will_not_fix
 - fix_deferred
 - end_of_life
+```
 
 To ignore vulnerabilities with specific statuses, use the
 
@@ -105,3 +108,17 @@ licenses:
     paths:
       - "usr/share/gcc/python/libstdcxx/v6/__init__.py"
 ```
+
+# Skipping Files and Directories
+
+_**Skipping Files**_
+Using the --skip-files flag:
+
+	trivy image --skip-files "./testdata/*/bar" image:tag
+ 	trivy config --skip-files "./foo/**/*.tf" .
+
+_**Skip Directories**_
+Using the --skip-dirs flag:
+
+	trivy image --skip-dirs "./testdata/*" image:tag
+ 	trivy config --skip-dirs "**/.terraform" .
