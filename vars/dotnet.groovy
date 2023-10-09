@@ -19,7 +19,6 @@ void call() {
     String server = "nttraining.database.windows.net"
     String user = "nttraining"
     String database = "projecttemplate"
-    String appsettingsjenkins = "$(find . -type f -name appsettings.jenkins.json)"
 
 //========================================================================
 //========================================================================
@@ -36,7 +35,8 @@ void call() {
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/be/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/be/service.yml')
             writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
-            echo "a $appsettingsjenkins"
+            int code = sh returnStatus: true, script: """ find . -type f -name appsettings.jenkins.json """
+            echo "a $code"
             // withCredentials([string(credentialsId: 'connectionstrings', variable: 'connectionstrings')]) {
             //     sh "envsubst < ${(find . -type f -name appsettings.jenkins.json)} > ${(find . -type f -name appsettings.json)}; cat ${(find . -type f -name appsettings.json)}"
             // }
