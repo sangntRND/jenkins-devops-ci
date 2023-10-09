@@ -46,5 +46,5 @@ _**Supported for all scanners: secret, vuln, config, license**_
 
 Use --severity option.
 
-```trivy image --severity HIGH,CRITICAL ruby:2.4.0```
-```trivy conf --severity HIGH,CRITICAL examples/misconf/mixed```
+	trivy image --severity HIGH,CRITICAL ruby:2.4.0
+	trivy conf --severity HIGH,CRITICAL examples/misconf/mixed
