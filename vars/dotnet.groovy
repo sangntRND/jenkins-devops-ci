@@ -35,10 +35,13 @@ void call() {
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/be/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/be/service.yml')
             writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
+            // withCredentials([string(credentialsId: 'connectionstrings', variable: 'connectionstrings')]) {
+            //     sh "export connectionstrings=${connectionstrings}; \
+            //         envsubst < $(find . -type f -name appsettings.jenkins.json) > $(find . -type f -name appsettings.json); \
+            //         cat $(find . -type f -name appsettings.json)"
+            // }
             withCredentials([string(credentialsId: 'connectionstrings', variable: 'connectionstrings')]) {
-                sh "export connectionstrings=${connectionstrings}; \
-                    envsubst < $(find . -type f -name appsettings.jenkins.json) > $(find . -type f -name appsettings.json); \
-                    cat $(find . -type f -name appsettings.json)"
+                sh " echo ${connectionstrings}"
             }
         }
     }
