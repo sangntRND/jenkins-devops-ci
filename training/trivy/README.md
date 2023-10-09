@@ -7,8 +7,8 @@
 
 By default, vulnerability and secret scanning are enabled
 
-| Left-Aligned  | Center Aligned  | Right Aligned |
-| :------------ |:---------------| -----:|
+| Target  | Command  | Scanner |
+| :------------ |:---------------| :-----|
 | File System     | trivy fs | trivy fs . --scanners secret,vuln,config,license |
 | Code Repository     | trivy repo        |   trivy repo --scanners secret,vuln,config,license https://github.com/LocTaRND/jenkins-devops-ci |
 | Container Image | trivy image        |    trivy image --scanners secret,vuln,config,license ubuntu:22.04 |
