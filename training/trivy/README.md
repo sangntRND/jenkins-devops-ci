@@ -7,32 +7,39 @@
 
 By default, vulnerability and secret scanning are enabled
 
+# General usage
+
 | Target  | Command  | Scanner |
 | :------------ |:---------------| :-----|
 | File System     | trivy fs | trivy fs . --scanners secret,vuln,config,license |
 | Code Repository     | trivy repo        |   trivy repo --scanners secret,vuln,config,license https://github.com/LocTaRND/jenkins-devops-ci |
 | Container Image | trivy image        |    trivy image --scanners secret,vuln,config,license ubuntu:22.04 |
 
-
-# File System
-- Secrets
-	trivy fs . --scanners secret
-
-- Vulnerabilitys
-	trivy fs . --scanners vuln
-
-- Misconfigurations
-	trivy fs . --scanners config
-
-- Licenses
-	trivy fs . --scanners license
-
-- Multiple scanners into one line
-	trivy fs . --scanners secret,vuln,config,license
-
-# Code Repository
-
-
-
 # Filtering
-	trivy fs . --scanners vuln --severity HIGH,CRITICAL
+
+**Only supported with Vulnerability Scanner**
+
+Trivy supports the following vulnerability statuses:
+- unknown
+- not_affected
+- affected
+- fixed
+- under_investigation
+- will_not_fix
+- fix_deferred
+- end_of_life
+
+To ignore vulnerabilities with specific statuses, use the --ignore-status
+	```$ trivy image --ignore-status affected,fixed ruby:2.4.0```
+
+| Target  | Filtering  | Scanner |
+| :------------ |:---------------| :-----|
+| File System     | trivy fs | trivy fs . --scanners vuln |
+| Code Repository     | trivy repo        |   trivy repo --scanners vuln https://github.com/LocTaRND/jenkins-devops-ci |
+| Container Image | trivy image        |    trivy image --scanners vuln ubuntu:22.04 |
+
+| Target  | Command  | Scanner |
+| :------------ |:---------------| :-----|
+| File System     | trivy fs | trivy fs . --scanners vuln |
+| Code Repository     | trivy repo        |   trivy repo --scanners vuln https://github.com/LocTaRND/jenkins-devops-ci |
+| Container Image | trivy image        |    trivy image --scanners vuln ubuntu:22.04 |
