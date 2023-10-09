@@ -9,9 +9,9 @@ By default, vulnerability and secret scanning are enabled
 
 | Left-Aligned  | Center Aligned  | Right Aligned |
 | :------------ |:---------------:| -----:|
-| col 3 is      | some wordy text | $1600 |
-| col 2 is      | centered        |   $12 |
-| zebra stripes | are neat        |    $1 |
+| File System     | trivy fs | $1600 |
+| Code Repository     | trivy repo        |   $12 |
+| Container Image | trivy image        |    $1 |
 
 
 # File System
