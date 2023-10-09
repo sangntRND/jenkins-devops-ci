@@ -95,7 +95,7 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 			- xUnit plugin
 			- Cobertura Plugin
 			- Code Coverage Plugin
-                  	- HTML Publisher plugin
+            - HTML Publisher plugin
 			- Pipeline Utility Steps
 			- Kubernetes plugin
    			- Kubernetes CLI Plugin
@@ -103,7 +103,7 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 		- Tools:
 			- kubectl cli
 			- docker
-                  	- trivy
+            - trivy
 	- added credentials: http://jenkinsserver:8080/manage/credentials/store/system/domain/_/
 		- GitHub with Kind Username with password (ID name: github)
   		- GitHub Manage Webhook with Kind Secret text (ID name: githubserver)	 
@@ -117,7 +117,7 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
    			- Name: github
 			- API URL: https://api.github.com
 			- Credentials: githubserver
-           		- [x] Manage hooks   
+           	- [x] Manage hooks   
    		- GitHub Enterprise Servers
 			- API endpoint: https://api.github.com
 			- Name: github
@@ -128,20 +128,20 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 			- [x] Include @Library changes in job recent changes 
 		- Retrieval method: Modern SCM
 			- Source Code Management: Git
-				- Project Repository: https://github.com/LocTaRND/jenkins-devops-ci.git
-				- Credentials: github
+			- Project Repository: https://github.com/LocTaRND/jenkins-devops-ci.git
+			- Credentials: github
     		![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/6588341e-e645-468c-a6e7-10314b97c094)
  
 - SonarQube Server
   	- Generate Tokens: http://sonarserver:9000/account/security
-  	- ![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/a7564c16-f262-4dc7-9491-e45a3fd68114)
+  	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/a7564c16-f262-4dc7-9491-e45a3fd68114)
 
 - Resource Group:
 	- Create resource group called: demo
 - ACR
 	- Create ACR called: pisharpeddemo 
   	- Admin user: Enable
-  	- ![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/3b68abf8-0c03-40b7-9625-ed909572462d)
+  	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/3b68abf8-0c03-40b7-9625-ed909572462d)
 
 - SQL Server:
 	- Create SQL server called: pisharpeddemo
@@ -152,7 +152,7 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 - AKS
 	- Create AKS called: demo
 	- Attach an ACR to an AKS cluster:
-   		- az aks update -n demo -g demo --attach-acr pisharpeddemo
+   		```az aks update -n demo -g demo --attach-acr pisharpeddemo```
 - Repositories:
 	- https://github.com/nashtech-garage/dotnet-bookstore-api/tree/jenkins
    
