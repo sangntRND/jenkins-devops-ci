@@ -8,7 +8,7 @@
 # DevSecOps Project
 This is the devsecops project and will contain all automation related to CI Architecture. 
 
-	![image](images/cicdpipelinesecurity.jpg)
+	![cicdpipelinesecurity](./images/cicdpipelinesecurity.jpg)
  
 Folder Structure
  - resources - Jenkins Library Resources (External libraries may load adjunct files from a resources/ directory using the libraryResource step)
