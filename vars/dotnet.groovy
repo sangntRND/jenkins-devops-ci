@@ -41,7 +41,7 @@ void call() {
             //         cat $(find . -type f -name appsettings.json)"
             // }
             withCredentials([string(credentialsId: 'connectionstrings', variable: 'connectionstrings')]) {
-                sh "echo ${connectionstrings}"
+                sh "echo '${connectionstrings}'"
             }
         }
     }
