@@ -91,23 +91,27 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 	- installed some
 		- Plugins:
 			- Jenkins suggested
- 			- Docker PipelineVersion
-			- xUnit
-			- Cobertura
-			- Code Coverage API
-                  - HTML Publisher
+ 			- Docker Pipeline
+			- xUnit plugin
+			- Cobertura Plugin
+			- Code Coverage Plugin
+                  	- HTML Publisher plugin
 			- Pipeline Utility Steps
-			- Kubernetes
+			- Kubernetes plugin
+   			- Kubernetes CLI Plugin
+      			- Kubernetes Credentials Plugin
 		- Tools:
 			- kubectl cli
 			- docker
-                  - trivy
-	- added credentials
+                  	- trivy
+	- added credentials: http://jenkinsserver:8080/manage/credentials/store/system/domain/_/
 		- GitHub with Kind Username with password (ID name: github)
+  		- GitHub Manage Webhook with Kind Secret text (ID name: githubserver)	 
 		- ACR with Kind Username with password (ID name: acr-demo-token)
-		- SonarQube WebHook with Kind Secret text (ID name: sonarwh)
 		- SonarQube Token with Kind Secret text (ID name: sonar-token)
-		- kubeconig with Kind Secret file (ID name: config)
+  		- Connection Strings (database info) with Kind Secret text (ID name: connectionstrings)
+		- kubeconig with Kind Secret file (ID name: aksdemo)
+  		![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/ecec5fcf-223b-4de7-b402-0467e0d861dc) 
 	- manage Jenkins -> System
    		- GitHub Enterprise Servers
 			- API endpoint: https://api.github.com
@@ -127,6 +131,8 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 
 - ACR
   	- Admin user: Enable
+  	- ![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/3b68abf8-0c03-40b7-9625-ed909572462d)
+
 - MSSQL
 - AKS
 	- Attach an ACR to an AKS cluster:
