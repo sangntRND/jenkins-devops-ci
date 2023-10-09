@@ -1,0 +1,13 @@
+FROM pisharpeddemo.azurecr.io/baseimages/ubuntu:jammy-dotnet-sdk-6.0.414
+
+ENV PATH="/tmp/DOTNET_CLI_HOME/.dotnet/tools:$PATH"
+
+RUN apt-get update \
+# Install Java
+    && apt install -y openjdk-17-jdk -y \
+    && apt install -y openjdk-17-jre -y \
+# Install Dotnet Tools
+    && dotnet tool install --global dotnet-sonarscanner \
+    && dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.26 \
+#Cleanup
+    && rm -rf /var/lib/apt/lists/*

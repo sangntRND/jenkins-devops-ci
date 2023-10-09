@@ -1,0 +1,27 @@
+FROM BASEIMG=ubuntu:jammy
+
+ARG dotnet_sdk_version
+ARG dotnet_runtime_target
+ARG dotnet_sha512
+
+ENV DOTNET_SDK_VERSION=${dotnet_sdk_version} \
+    DOTNET_RUNTIME_TARGET=${dotnet_runtime_target} \
+    # Install .NET Core SDK + EF Tool
+    PATH="/root/.dotnet/tools:$PATH" \
+    DOTNET_USE_POLLING_FILE_WATCHER=true \
+    NUGET_XMLDOC_MODE=skip \ 
+    DOTNET_CLI_HOME=/tmp/DOTNET_CLI_HOME \
+    PATH="/tmp/DOTNET_CLI_HOME/.dotnet/tools:/tmp/DOTNET_CLI_HOME/tools:/tmp/DOTNET_CLI_HOME:$PATH"
+
+RUN apt-get update; \
+    # .NET dependencies 
+    apt-get install -yq --no-install-recommends curl libc6 libgcc1 libgssapi-krb5-2 libicu70 libssl3 libstdc++6 zlib1g; \
+    curl -SL --output dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz \
+    && echo "$dotnet_sha512 dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -ozxf dotnet.tar.gz -C /usr/share/dotnet \
+    && rm dotnet.tar.gz \
+    && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet \
+    # Trigger first run experience by running arbitrary cmd
+    && dotnet help \
+    && dotnet tool install --global dotnet-ef; dotnet tool install --global dotnet-dump; dotnet tool install --global dotnet-gcdump; 
