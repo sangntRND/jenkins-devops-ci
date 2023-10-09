@@ -20,8 +20,8 @@ Folder Structure
 - Understand the basics of the Jenkins architecture.
 - Understand the concept of the Job DSL Plugin on Jenkins and its features.
 - Understand with Shared Libraries and Plug-ins
-- Implement CICD Pipelines With Jenkins Groovy script
-- Understand the basic scenario CICD flow (Build -> Run Testing -> Build Images -> Sonar analysis -> Quality Gateway -> Push Images -> Deploy)
+- Implement CICD Pipelines Security With Jenkins Groovy script
+- Understand the basic scenario CICD flow
 
 # Prerequisite
 - Working knowledge of Jenkins
