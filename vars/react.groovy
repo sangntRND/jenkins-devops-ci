@@ -148,7 +148,6 @@ void call() {
                             serverUrl: '') {
                 sh "export acrUrl=${demoRegistry}; export containerName=${containerName}; export projectname=${projectName}; export tag=${BUILD_NUMBER}; \
                 envsubst < .ci/deployment.yml > deployment.yml; envsubst < .ci/service.yml > service.yml"
-                sh "kubectl create ns demo"
                 sh "kubectl apply -f deployment.yml"
                 sh "kubectl apply -f service.yml"
             }
