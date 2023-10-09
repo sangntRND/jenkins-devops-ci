@@ -24,56 +24,6 @@ Folder Structure
 - Basic knowledge of automation and the CI-CD strategy
 - Basic knowledge of Docker and K8S
 
-# Requirement
-- Jenkins Server has
-	- installed some
-		- Plugins:
-			- Jenkins suggested
- 			- Docker PipelineVersion
-			- xUnit
-			- Cobertura
-			- Code Coverage API
-                  - HTML Publisher
-			- Pipeline Utility Steps
-			- Kubernetes
-		- Tools:
-			- kubectl cli
-			- docker
-                  - trivy
-	- added credentials
-		- GitHub with Kind Username with password (ID name: github)
-		- ACR with Kind Username with password (ID name: acr-demo-token)
-		- SonarQube WebHook with Kind Secret text (ID name: sonarwh)
-		- SonarQube Token with Kind Secret text (ID name: sonar-token)
-		- kubeconig with Kind Secret file (ID name: config)
-	- manage Jenkins -> System
-   		- GitHub Enterprise Servers
-			- API endpoint: https://api.github.com
-			- Name: devops
-		- Global Pipeline Libraries
-			- Name: devops-jenkins-ci
-			- Default version: jenkins
-			- [x] Allow default version to be overridden
-			- [x] Include @Library changes in job recent changes 
-		- Retrieval method: Modern SCM
-			- Source Code Management: Git
-				- Project Repository: https://github.com/nashtech-garage/devops-ci-cd.git
-				- Credentials: github
-- SonarQube Server
-  	- Generate Tokens
-  	- Create Webhook: Administration -> Configuration -> Webhooks -> Create
-  	  	- Name: Jenkins
-  	  	- URL: 	http://<Jenkinserver>/sonarqube-webhook/
-  	  	- [x] Secret
-- ACR
-  	- Admin user: Enable
-- MSSQL
-- AKS
-	- Attach an ACR to an AKS cluster:
-   		- az aks update -n myAKSCluster -g myResourceGroup --attach-acr acr-name
-- Repositories:
-	- https://github.com/nashtech-garage/dotnet-bookstore-api/tree/jenkins
-
 # Install Jenkins
 - Install JDK
   	```
@@ -136,6 +86,54 @@ Refer: https://aquasecurity.github.io/trivy/v0.29.2/getting-started/installation
 Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 ```
 
+# Requirement
+- Jenkins Server has
+	- installed some
+		- Plugins:
+			- Jenkins suggested
+ 			- Docker PipelineVersion
+			- xUnit
+			- Cobertura
+			- Code Coverage API
+                  - HTML Publisher
+			- Pipeline Utility Steps
+			- Kubernetes
+		- Tools:
+			- kubectl cli
+			- docker
+                  - trivy
+	- added credentials
+		- GitHub with Kind Username with password (ID name: github)
+		- ACR with Kind Username with password (ID name: acr-demo-token)
+		- SonarQube WebHook with Kind Secret text (ID name: sonarwh)
+		- SonarQube Token with Kind Secret text (ID name: sonar-token)
+		- kubeconig with Kind Secret file (ID name: config)
+	- manage Jenkins -> System
+   		- GitHub Enterprise Servers
+			- API endpoint: https://api.github.com
+			- Name: devops
+		- Global Pipeline Libraries
+			- Name: devops-jenkins-ci
+			- Default version: jenkins
+			- [x] Allow default version to be overridden
+			- [x] Include @Library changes in job recent changes 
+		- Retrieval method: Modern SCM
+			- Source Code Management: Git
+				- Project Repository: https://github.com/nashtech-garage/devops-ci-cd.git
+				- Credentials: github
+- SonarQube Server
+  	- Generate Tokens: http://sonarserver:9000/account/security
+  	- ![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/a7564c16-f262-4dc7-9491-e45a3fd68114)
+
+- ACR
+  	- Admin user: Enable
+- MSSQL
+- AKS
+	- Attach an ACR to an AKS cluster:
+   		- az aks update -n myAKSCluster -g myResourceGroup --attach-acr acr-name
+- Repositories:
+	- https://github.com/nashtech-garage/dotnet-bookstore-api/tree/jenkins
+   
 # Refer
 - https://www.jenkins.io/doc/book/pipeline/shared-libraries/
 - https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli
