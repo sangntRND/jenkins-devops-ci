@@ -29,17 +29,8 @@ Trivy supports the following vulnerability statuses:
 - fix_deferred
 - end_of_life
 
-To ignore vulnerabilities with specific statuses, use the --ignore-status
-	```$ trivy image --ignore-status affected,fixed ruby:2.4.0```
-
-| Target  | Filtering  | Scanner |
-| :------------ |:---------------| :-----|
-| File System     | trivy fs | trivy fs . --scanners vuln |
-| Code Repository     | trivy repo        |   trivy repo --scanners vuln https://github.com/LocTaRND/jenkins-devops-ci |
-| Container Image | trivy image        |    trivy image --scanners vuln ubuntu:22.04 |
-
-| Target  | Command  | Scanner |
-| :------------ |:---------------| :-----|
-| File System     | trivy fs | trivy fs . --scanners vuln |
-| Code Repository     | trivy repo        |   trivy repo --scanners vuln https://github.com/LocTaRND/jenkins-devops-ci |
-| Container Image | trivy image        |    trivy image --scanners vuln ubuntu:22.04 |
+To ignore vulnerabilities with specific statuses, use the 
+	```--ignore-status
+ 	   --ignore-unfixed```
+	- Ex:
+		```trivy image --ignore-status affected,fixed ruby:2.4.0```
