@@ -17,7 +17,9 @@ By default, vulnerability and secret scanning are enabled
 
 # Filtering
 
-**Only supported with Vulnerability Scanner**
+**By Status**
+
+_**Only supported with Vulnerability Scanner**_
 
 Trivy supports the following vulnerability statuses:
 - unknown
@@ -36,3 +38,13 @@ To ignore vulnerabilities with specific statuses, use the
      
 	- Ex:
 		trivy image --ignore-status affected,fixed ruby:2.4.0
+  		trivy image --ignore-unfixed ruby:2.4.0
+
+**By Severity**
+
+_**Supported for all scanners: secret, vuln, config, license**_
+
+Use --severity option.
+
+```trivy image --severity HIGH,CRITICAL ruby:2.4.0```
+```trivy conf --severity HIGH,CRITICAL examples/misconf/mixed```
