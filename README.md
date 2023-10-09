@@ -136,14 +136,23 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
   	- Generate Tokens: http://sonarserver:9000/account/security
   	- ![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/a7564c16-f262-4dc7-9491-e45a3fd68114)
 
+- Resource Group:
+	- Create resource group called: demo
 - ACR
+	- Create ACR called: pisharpeddemo 
   	- Admin user: Enable
   	- ![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/3b68abf8-0c03-40b7-9625-ed909572462d)
 
-- MSSQL
+- SQL Server:
+	- Create SQL server called: pisharpeddemo
+   	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/871904a6-2352-47c1-82a1-76c5f6dbe7ee)
+	- Create database name called: projecttemplate
+	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/fa5eee13-c7da-4c20-a671-c6a3b358c132)
+ 
 - AKS
+	- Create AKS called: demo
 	- Attach an ACR to an AKS cluster:
-   		- az aks update -n myAKSCluster -g myResourceGroup --attach-acr acr-name
+   		- az aks update -n demo -g demo --attach-acr pisharpeddemo
 - Repositories:
 	- https://github.com/nashtech-garage/dotnet-bookstore-api/tree/jenkins
    
