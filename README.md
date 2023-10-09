@@ -99,7 +99,7 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 			- Pipeline Utility Steps
 			- Kubernetes plugin
    			- Kubernetes CLI Plugin
-      			- Kubernetes Credentials Plugin
+			- Kubernetes Credentials Plugin
 		- Tools:
 			- kubectl cli
 			- docker
@@ -113,18 +113,25 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 		- kubeconig with Kind Secret file (ID name: aksdemo)
   		![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/ecec5fcf-223b-4de7-b402-0467e0d861dc) 
 	- manage Jenkins -> System
+ 		- GitHub Servers
+   			- Name: github
+      			- API URL: https://api.github.com
+         		- Credentials: githubserver
+           		- [x] Manage hooks   
    		- GitHub Enterprise Servers
 			- API endpoint: https://api.github.com
-			- Name: devops
+			- Name: github
 		- Global Pipeline Libraries
-			- Name: devops-jenkins-ci
-			- Default version: jenkins
+			- Name: jenkins-devops-ci
+			- Default version: pisharped
 			- [x] Allow default version to be overridden
 			- [x] Include @Library changes in job recent changes 
 		- Retrieval method: Modern SCM
 			- Source Code Management: Git
-				- Project Repository: https://github.com/nashtech-garage/devops-ci-cd.git
+				- Project Repository: https://github.com/LocTaRND/jenkins-devops-ci.git
 				- Credentials: github
+    		![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/6588341e-e645-468c-a6e7-10314b97c094)
+ 
 - SonarQube Server
   	- Generate Tokens: http://sonarserver:9000/account/security
   	- ![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/a7564c16-f262-4dc7-9491-e45a3fd68114)
