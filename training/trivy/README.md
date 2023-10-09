@@ -8,10 +8,10 @@
 By default, vulnerability and secret scanning are enabled
 
 | Left-Aligned  | Center Aligned  | Right Aligned |
-| :------------ |:---------------:| -----:|
-| File System     | trivy fs | $1600 |
-| Code Repository     | trivy repo        |   $12 |
-| Container Image | trivy image        |    $1 |
+| :------------ |:---------------| -----:|
+| File System     | trivy fs | trivy fs . --scanners secret,vuln,config,license |
+| Code Repository     | trivy repo        |   trivy repo --scanners secret,vuln,config,license https://github.com/LocTaRND/jenkins-devops-ci |
+| Container Image | trivy image        |    trivy image --scanners secret,vuln,config,license ubuntu:22.04 |
 
 
 # File System
