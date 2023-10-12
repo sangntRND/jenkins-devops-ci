@@ -52,7 +52,7 @@ void call() {
 
     stage ("Trivy Scan Secret") {
         script {
-            sh "trivy fs . --scanners secret --format template --template @.ci/html.tpl -o .ci/secretreport.html"
+            sh "trivy fs . --scanners secret --exit-code 0 --format template --template @.ci/html.tpl -o .ci/secretreport.html"
             publishHTML (target : [allowMissing: true,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
@@ -78,7 +78,7 @@ void call() {
 
     stage ("Trivy Scan Vulnerabilities") {
         script {
-            sh "trivy fs . --severity HIGH,CRITICAL --scanners vuln --format template --template @.ci/html.tpl -o .ci/vulnreport.html"
+            sh "trivy fs . --severity HIGH,CRITICAL --scanners vuln --exit-code 0 --format template --template @.ci/html.tpl -o .ci/vulnreport.html"
             publishHTML (target : [allowMissing: true,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,

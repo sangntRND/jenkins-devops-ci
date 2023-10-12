@@ -23,8 +23,9 @@ void call(Map pipelineParams) {
                         anyOf{
                             // Branch Event: Nornal Flow
                             anyOf {
-                                branch 'main'
-                                branch 'jenkins'
+                                // branch 'main'
+                                // branch 'jenkins'
+                                // branch 'PR*'
                                 branch 'pisharped'
                             }
                             // Manual Run: Only if checked.
