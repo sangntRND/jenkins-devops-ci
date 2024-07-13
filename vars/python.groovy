@@ -17,6 +17,7 @@ def call() {
     // String containerName = "jenkins"
     // String rununitTest = "dotnet test --no-build --no-restore -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
     def trivy = new Trivy()
+    def global = new Global()
 //========================================================================
 //========================================================================
 
@@ -32,27 +33,9 @@ def call() {
         }
     }
 
-    trivy.trivyScanSecret()
-
-    // stage ("Build Solution") {
-    //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-    //         docker.withRegistry("https://${demoRegistry}", acrCredential ) {
-    //             docker.build("${containerName}/${projectName}-sdk:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SDK \
-    //             --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseTag} ${WORKSPACE}")
-    //         }
-    //     }
-    // }
-
-    // stage ('Run Unit Tests') {
-    //     sh "mkdir -p results"
-    //     sh "docker run -i --rm --volume './results:/src/results' ${containerName}/${projectName}-sdk:${BUILD_NUMBER} $rununitTest"
-    // }
-
-    // stage ('Run Integration Tests') {
-    //     echo "Run Integration Tests"
-    //     sh "ls -la ./results"
-    // }
-
+    trivy.trivyScanLocal()
+    global.runPythonUnitTest()
+    global.publishCoverageReport
     // stage ('Process Test Results') {
     //     docker.image("${containerName}/${projectName}-sdk:${BUILD_NUMBER}").inside() {
     //         xunit(

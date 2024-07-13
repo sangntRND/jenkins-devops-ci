@@ -1,7 +1,7 @@
 package main.pisharp
 
-def trivyScanSecret() {
-    stage ("Trivy Scan Secret") {
+def trivyScanLocal() {
+    stage ("Trivy Scan local") {
         script {
             sh "trivy fs . --format template --template @.ci/html.tpl -o .ci/secretreport.html"
             publishHTML (target : [allowMissing: true,
@@ -15,4 +15,6 @@ def trivyScanSecret() {
         }
     }
 }
+
+
 
