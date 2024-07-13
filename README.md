@@ -65,6 +65,24 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 # Add Jenkins user into docker group
 sudo usermod -aG docker jenkins
+sudo usermod -aG docker $USER
+```
+
+***Note: Log out shell and login again***
+
+# Install kind and usage
+kind is a tool for running local Kubernetes clusters using Docker container “nodes”.
+kind was primarily designed for testing Kubernetes itself, but may be used for local development or CI.
+
+```
+
+[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.23.0/kind-linux-amd64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+
+# Create the new K8S cluster
+kind create cluster --name my-kind-cluster
+
 ```
 
 # Install kubectl
@@ -87,36 +105,59 @@ Refer: https://aquasecurity.github.io/trivy/v0.29.2/getting-started/installation
 
 # Install Sonar
 ```
-Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
+Refer: https://gist.github.com/dmancloud/0abf6ad0cb16e1bce2e907f457c8fce9
+
+Default credential:
+usernam: admin
+password: admin
 ```
 
 # Requirement
 - Jenkins Server has
 	- installed some
-		- Plugins:
-			- Jenkins suggested
- 			- Docker Pipeline
-			- xUnit plugin
-			- Cobertura Plugin
-			- Code Coverage Plugin
-            - HTML Publisher plugin
-			- Pipeline Utility Steps
-			- Kubernetes plugin
-   			- Kubernetes CLI Plugin
-			- Kubernetes Credentials Plugin
-		- Tools:
+		- Plugins: 
+			- Jenkins suggested (Login first time)
+ 			- Additional Plugin: http://JenkinIP:8080/manage/pluginManager/available
+				- Docker Pipeline
+				- xUnit
+				- Cobertura
+				- Code Coverage
+				- HTML Publisher
+				- Pipeline Utility Steps
+				- Kubernetes
+				- Kubernetes CLI
+				- Kubernetes Credentials
+				![image](./assets/jenkins_plugins.png)
+		- Tools: (Done above steps)
 			- kubectl cli
 			- docker
             - trivy
-	- added credentials: http://jenkinsserver:8080/manage/credentials/store/system/domain/_/
+	- added credentials: http://JenkinIP:8080/manage/credentials/store/system/domain/_/
 		- GitHub with Kind Username with password (ID name: github)
-  		- GitHub Manage Webhook with Kind Secret text (ID name: githubserver)	 
-		- ACR with Kind Username with password (ID name: acr-demo-token)
+			+ username: github username
+			+ password: generate the new token with full permissions ( https://github.com/settings/tokens )\
+			-> Create the github credentials to access github: 
+			![image](./assets/jenkins_github_credential.png)
+  		<!-- - GitHub Manage Webhook with Kind Secret text (ID name: githubserver)	  -->
+		- Dockerhub with Kind Username with password (ID name: dockerhub-demo-token)
+			+ username: dockerhub username
+			+ password: generate the new token with full permissions ( https://hub.docker.com/settings/security ) \
+			-> Create the dockerhub credentials to access dockerhub to store container images
+			![image](./assets/jenkins_dockerhub_credential.png)
 		- SonarQube Token with Kind Secret text (ID name: sonar-token)
-  		- Connection Strings (database info) with Kind Secret text (ID name: connectionstrings)
-		- kubeconig with Kind Secret file (ID name: aksdemo)
-  		![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/ecec5fcf-223b-4de7-b402-0467e0d861dc) 
-	- manage Jenkins -> System
+			+ Secret text get from http://SonarIP::9000/account/security with Global type
+			![image](./assets/sonar_token.png) \
+			-> Create the Sonarqube credentails
+			![image](./assets/jenkins_sonar_credential.png)
+  		<!-- - Connection Strings (database info) with Kind Secret text (ID name: connectionstrings) -->
+		- Kubeconfig with Kind Secret text (ID name: k8s-kind-demo)
+			+ Secret text get from running this command in the server: 
+				```
+				kind get kubeconfig --name=my-kind-cluster 
+				```
+				-> Create the Kubeconfig credentails
+				![image](./assets/jenkins_k8s_credential.png)
+	- Setup the Jenkins System to connect Github and shared libaries
  		- GitHub Servers
    			- Name: ```github```
 			- API URL: https://api.github.com
@@ -125,23 +166,18 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
    		- GitHub Enterprise Servers
 			- API endpoint: https://api.github.com
 			- Name: github
+		![image](./assets/jenkins_github_enterprise_system.png)
 		- Global Pipeline Libraries
 			- Name: ```jenkins-devops-ci```
 			- Default version: ```pisharped```
 			- [x] Allow default version to be overridden
 			- [x] Include @Library changes in job recent changes 
-		- Retrieval method: Modern SCM
-			- Source Code Management: Git
-			- Project Repository: https://github.com/LocTaRND/jenkins-devops-ci.git
-			- Credentials: ```github```
-    		![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/6588341e-e645-468c-a6e7-10314b97c094)
- 
-- SonarQube Server
-  	- Generate Tokens: http://sonarserver:9000/account/security
-  	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/a7564c16-f262-4dc7-9491-e45a3fd68114)
+			- Retrieval method: Modern SCM
+				- Source Code Management: Git
+				- Project Repository: https://github.com/sangntRND/jenkins-devops-ci.git
+				- Credentials: ```github```
+    	![image](./assets/jenkins_global_pipeline_libs.png)
 
-- Resource Group:
-	- Create resource group called: ```demo```
 - ACR
 	- Create ACR called: ```pisharpeddemo ```
   	- Admin user: ```Enable```
@@ -159,7 +195,20 @@ Refer: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
    		```az aks update -n demo -g demo --attach-acr pisharpeddemo```
 - Repositories:
 	- https://github.com/nashtech-garage/dotnet-bookstore-api/tree/jenkins
-   
+
+# Step by Step to create the pipeline
+## Step 1: Create the new iteam with Organization Folder type
+   ![image](./assets/jenkins_1_create_org_folder.png)
+   - Keep everything default except below configuration
+	  - Projects:
+	    - Repository Sources: GitHub Organization
+		  - API endpoint: Github
+		  - Credentials: github
+		  - Owner: GitHub Organization or GitHub User Account
+			![image](./assets/jenkins_1_org_config.png)
+   - Save configuration and the jenkin will scan the entire organization to find the repositories it contains
+   ![image](./assets/jenkins_1_result.png)
+## Step 2: 
 # Refer
 - https://www.jenkins.io/doc/book/pipeline/shared-libraries/
 - https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli

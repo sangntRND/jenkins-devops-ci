@@ -24,7 +24,6 @@ void call(Map pipelineParams) {
                             // Branch Event: Nornal Flow
                             anyOf {
                                 // branch 'main'
-                                // branch 'jenkins'
                                 // branch 'PR*'
                                 branch 'pisharped'
                             }
