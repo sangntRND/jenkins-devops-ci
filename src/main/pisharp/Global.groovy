@@ -7,8 +7,14 @@ def runPythonUnitTest() {
     }
 }
 
-def publishCoverageReport(){
-    stage ('Publish Coverage Report') {
+def processTestResults(){
+    stage ('Process Test Results') {
+        xunit thresholds: [
+            failed(unstableThreshold: '0'),
+            skipped()
+        ], tools: [
+            JUnit(deleteOutputFiles: true, failIfNotNew: false, pattern: 'results/test-results.xml', skipNoTestFiles: true, stopProcessingIfError: true)
+        ]
         cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "results/*.xml", conditionalCoverageTargets: '70, 0, 0', failUnhealthy: true, failUnstable: true, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false
     }
 }

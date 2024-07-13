@@ -33,9 +33,9 @@ def call() {
         }
     }
 
-    trivy.trivyScanLocal()
+    trivy.trivyScanSecrets()
     global.runPythonUnitTest()
-    global.publishCoverageReport()
+    global.processTestResults()
     // stage ('Process Test Results') {
     //     docker.image("${containerName}/${projectName}-sdk:${BUILD_NUMBER}").inside() {
     //         xunit(
