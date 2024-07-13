@@ -3,7 +3,7 @@ package main.pisharp
 def runPythonUnitTest() {
     stage ("Run Unit Tests") {
         sh "mkdir -p results"
-        sh 'docker run --rm -v $(pwd):/app python:3.9-slim bash -c "pip install poetry && cd /app && poetry install --no-dev && poetry run pytest --cov=app --cov-report=xml:results/coverage.xml"'
+        sh 'docker run --rm -v $(pwd):/app python:3.9-slim bash -c "pip install poetry && cd /app && poetry install && poetry run pytest --cov=app --cov-report=xml:results/coverage.xml"'
     }
 }
 
