@@ -26,20 +26,17 @@ def call() {
 //========================================================================
 //========================================================================
 
-    // stage ('Prepare Package') {
-    //     script {
-    //         writeFile file: '.ci/Dockerfile.SDK', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.SDK')
-    //         writeFile file: '.ci/Dockerfile.Runtime.API', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.Runtime.API')
-    //         writeFile file: '.ci/Dockerfile.SonarBuild', text: libraryResource('dev/demo/flows/dotnet/docker/Dockerfile.SonarBuild')
-    //         writeFile file: '.ci/docker_entrypoint.sh', text: libraryResource('dev/demo/flows/dotnet/script/docker_entrypoint.sh')
-    //         writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/be/deployment.yml')
-    //         writeFile file: '.ci/service.yml', text: libraryResource('deploy/be/service.yml')
-    //         writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
-    //         withCredentials([string(credentialsId: 'connectionstrings', variable: 'connectionstrings')]) {
-    //             sh returnStatus: true, script: ''' envsubst < "$(find . -type f -name appsettings.jenkins.json)" > "$(find . -type f -name appsettings.json)"; cat "$(find . -type f -name appsettings.json)" '''
-    //         }
-    //     }
-    // }
+    stage ('Prepare Package') {
+        script {
+            mkdir -p .ci
+            writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/be/deployment.yml')
+            writeFile file: '.ci/service.yml', text: libraryResource('deploy/be/service.yml')
+            writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
+            withCredentials([string(credentialsId: 'connectionstrings', variable: 'connectionstrings')]) {
+                sh returnStatus: true, script: ''' envsubst < "$(find . -type f -name appsettings.jenkins.json)" > "$(find . -type f -name appsettings.json)"; cat "$(find . -type f -name appsettings.json)" '''
+            }
+        }
+    }
 
     stage ("Trivy Scan Secret") {
         script {
