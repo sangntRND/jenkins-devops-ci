@@ -82,11 +82,10 @@
     </script>
   </head>
   <body>
-    <h1>Trivy Report - {{ now }}</h1>
+    <h1>{{- escapeXML ( index . 0 ).Target }} - Trivy Report - {{ now }}</h1>
     <table>
     {{- range . }}
-    {{- $target := .Target }}
-      <tr class="group-header"><th colspan="6">{{ escapeXML .Type }}</th></tr>
+      <tr class="group-header"><th colspan="6">{{ .Type | toString | escapeXML }}</th></tr>
       {{- if (eq (len .Vulnerabilities) 0) }}
       <tr><th colspan="6">No Vulnerabilities found</th></tr>
       {{- else }}
@@ -134,33 +133,6 @@
           <br>
             <a href={{ escapeXML .PrimaryURL | printf "%q" }}>{{ escapeXML .PrimaryURL }}</a>
           </br>
-        </td>
-      </tr>
-        {{- end }}
-      {{- end }}
-      {{- if (eq (len .Secrets ) 0) }}
-      <tr><th colspan="6">No Secrets found</th></tr>
-      {{- else }}
-      <tr class="sub-header">
-        <th>Type</th>
-        <th>Secrets RuleID</th>
-        <th>Check</th>
-        <th>Severity</th>
-        <th>Message</th>
-      </tr>
-        {{- range .Secrets }}
-      <tr class="severity-{{ escapeXML .Severity }}">
-        <td class="secret-type">{{ escapeXML .Title }}</td>
-        <td>{{ escapeXML .RuleID }}</td>
-        <td class="secret-check">{{ escapeXML $target }}</td>
-        <td class="severity">{{ escapeXML .Severity }}</td>
-        <td class="link" data-more-links="off"  style="white-space:normal;">
-        <br>
-          files: {{ escapeXML $target }}
-        </br>
-        <br>
-          lines: {{ .StartLine }}
-        </br>     
         </td>
       </tr>
         {{- end }}

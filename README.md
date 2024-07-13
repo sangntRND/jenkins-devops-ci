@@ -100,7 +100,7 @@ wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-k
 echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
 sudo apt-get update
 sudo apt-get install trivy
-Refer: https://aquasecurity.github.io/trivy/v0.29.2/getting-started/installation/
+Refer: https://aquasecurity.github.io/trivy/v0.53/getting-started/installation/
 ```
 
 # Install Sonar
