@@ -1,4 +1,4 @@
-package main.pisharped
+package main.pisharp
 
 class Trivy {
     def trivyScanSecret() {

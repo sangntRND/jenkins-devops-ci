@@ -1,4 +1,4 @@
-import main.pisharped.*
+import main.pisharp.*
 
 def call() {
     // String projectName = "projecttemplate-api"
