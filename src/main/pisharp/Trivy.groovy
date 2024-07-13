@@ -1,6 +1,6 @@
 package main.pisharped
 
-Class Trivy {
+class Trivy {
     def trivyScanSecret() {
         stage ("Trivy Scan Secret") {
             script {
