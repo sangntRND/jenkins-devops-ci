@@ -16,7 +16,7 @@ def call() {
     // String namespace = "demo"
     // String containerName = "jenkins"
     // String rununitTest = "dotnet test --no-build --no-restore -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
-
+    def trivy = new Trivy()
 //========================================================================
 //========================================================================
 
@@ -25,14 +25,12 @@ def call() {
 
     stage ('Prepare Package') {
         script {
-            mkdir -p .ci
+            sh "mkdir -p .ci"
             writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/be/deployment.yml')
             writeFile file: '.ci/service.yml', text: libraryResource('deploy/be/service.yml')
             writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
         }
     }
-
-    def trivy = new Trivy()
 
     trivy.trivyScanSecret()
 
