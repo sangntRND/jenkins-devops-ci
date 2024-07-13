@@ -1,4 +1,3 @@
-#!/usr/bin/env groovy
 import main.pisharped.*
 
 void call() {
