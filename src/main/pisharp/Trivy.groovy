@@ -1,4 +1,4 @@
-package pisharped
+package main.pisharped
 
 def trivyScanSecret() {
     stage ("Trivy Scan Secret") {

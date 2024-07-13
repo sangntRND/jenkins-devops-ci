@@ -1,4 +1,6 @@
 #!/usr/bin/env groovy
+import main.pisharped.*
+
 void call() {
     // String projectName = "projecttemplate-api"
     // String runtime = "Microsoft.DSX.ProjectTemplate.API"
