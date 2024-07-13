@@ -34,7 +34,7 @@ void call(Map pipelineParams) {
                 }
                 steps {
                     script {
-                        echo "Hello world"
+                        python()
                     }
                 }
             }
