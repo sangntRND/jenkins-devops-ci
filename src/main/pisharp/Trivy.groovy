@@ -3,7 +3,7 @@ package main.pisharp
 def trivyScanSecret() {
     stage ("Trivy Scan Secret") {
         script {
-            sh "trivy fs . --scanners secret --format template --template @.ci/html.tpl -o .ci/secretreport.html"
+            sh "trivy fs . --format template --template @.ci/html.tpl -o .ci/secretreport.html"
             publishHTML (target : [allowMissing: true,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
