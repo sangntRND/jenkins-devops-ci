@@ -1,6 +1,6 @@
 import main.pisharped.*
 
-void call() {
+def call() {
     // String projectName = "projecttemplate-api"
     // String runtime = "Microsoft.DSX.ProjectTemplate.API"
     // String publishProject = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API/Microsoft.DSX.ProjectTemplate.API.csproj"
