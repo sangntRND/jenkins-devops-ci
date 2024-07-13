@@ -17,9 +17,6 @@ def call() {
     // String containerName = "jenkins"
     // String rununitTest = "dotnet test --no-build --no-restore -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
 
-    def trivy = new Trivy()
-
-    trivy.trivyScanSecret()
 //========================================================================
 //========================================================================
 
@@ -35,19 +32,9 @@ def call() {
         }
     }
 
-    stage ("Trivy Scan Secret") {
-        script {
-            sh "trivy fs . --scanners secret --format template --template @.ci/html.tpl -o .ci/secretreport.html"
-            publishHTML (target : [allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: '.ci',
-                reportFiles: 'secretreport.html',
-                reportName: 'Trivy Secrets Report',
-                reportTitles: 'Trivy Secrets Report']
-            )
-        }
-    }
+    def trivy = new Trivy()
+
+    trivy.trivyScanSecret()
 
     // stage ("Build Solution") {
     //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
