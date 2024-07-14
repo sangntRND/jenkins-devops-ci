@@ -1,6 +1,12 @@
 import main.pisharp.*
 
 def call() {
+    environment {
+        // Replace with your SonarQube server details
+        SONAR_HOST_URL = 'http://13.213.249.3:9000/'
+        // Add your SonarQube token here
+        SONAR_AUTH_TOKEN = credentials('sonar-token')
+    }
     // String projectName = "projecttemplate-api"
     // String runtime = "Microsoft.DSX.ProjectTemplate.API"
     // String publishProject = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API/Microsoft.DSX.ProjectTemplate.API.csproj"
@@ -18,6 +24,7 @@ def call() {
     // String rununitTest = "dotnet test --no-build --no-restore -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
     def trivy = new Trivy()
     def global = new Global()
+    def sonar = new Sonar()
 //========================================================================
 //========================================================================
 
@@ -38,6 +45,7 @@ def call() {
     trivy.trivyScanVulnerabilities()
     global.runPythonUnitTest()
     global.processTestResults()
+    sonar.sonarQubeAnalysis()
 
 
     // stage('SonarQube analysis') {

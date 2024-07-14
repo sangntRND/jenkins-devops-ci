@@ -123,6 +123,7 @@ password: admin
 				- Cobertura
 				- Code Coverage
 				- HTML Publisher
+				- SonarQube Scanner
 				- Pipeline Utility Steps
 				- Kubernetes
 				- Kubernetes CLI
