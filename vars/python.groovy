@@ -4,7 +4,7 @@ def call() {
     def imageRegistry = "registry.hub.docker.com"
     def credentialDockerId = "dockerhub-demo-token"
     def namespaceRegistry = "sanghvt"
-    def serviceName = pwd().getName().tokenize('_').first()
+    def serviceName = pwd().getBaseName().tokenize('_').first()
     def imageBuildTag = "${imageRegistry}/${namespaceRegistry}/${serviceName}:${BUILD_NUMBER}"
     
     def trivy = new Trivy()
