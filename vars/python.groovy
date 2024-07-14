@@ -6,7 +6,7 @@ def call() {
     def namespaceRegistry = "sanghvt"
     def gitopsRepo = 'https://github.com/sangntRND/pisharped-gitops.git'
     def gitCredential = 'github'
-    def serviceName = pwd().tokenize('/').last()tokenize('_').first()
+    def serviceName = pwd().tokenize('/').last().tokenize('_').first()
     def imageBuildTag = "${imageRegistry}/${namespaceRegistry}/${serviceName}:${BRANCH_NAME}-${BUILD_NUMBER}"
     def sonarHostURL = 'http://13.213.249.3:9000/'
     def trivy = new Trivy()
