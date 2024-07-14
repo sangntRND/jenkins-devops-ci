@@ -14,6 +14,7 @@ def sonarQubeAnalysis() {
                 sonar-scanner \
                 -Dsonar.projectKey=projecttemplate-python1-api \
                 -Dsonar.sources=. \
+                -Dsonar.exclusions=**/tests/**
                 -Dsonar.host.url=${SONAR_HOST_URL} \
                 -Dsonar.login=${SONAR_AUTH_TOKEN} \
                 -Dsonar.python.coverage.reportPaths=results/coverage.xml
