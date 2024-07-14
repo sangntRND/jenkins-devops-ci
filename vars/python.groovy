@@ -1,7 +1,7 @@
 import main.pisharp.*
 
 def call() {
-    def imageRegistry = "hub.docker.com"
+    def imageRegistry = "registry.hub.docker.com"
     def credentialDockerId = "dockerhub-demo-token"
     def namespaceRegistry = "sanghvt"
     def serviceName = pwd().tokenize('/').last()

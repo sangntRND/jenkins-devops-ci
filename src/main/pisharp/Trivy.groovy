@@ -46,9 +46,9 @@ def trivyScanImages(image){
     }
 }
 
-def trivyScanDockerImages(){
+def trivyScanDockerImages(image){
     stage ("Trivy Scan Docker Images") {
-        sh "trivy image --scanners vuln --exit-code 0 --severity HIGH,CRITICAL --format template --template @.ci/html.tpl -o .ci/imagesreport.html ${demoRegistry}/${containerName}/${projectName}:${BUILD_NUMBER}"
+        sh "trivy image --scanners vuln --exit-code 0 --severity HIGH,CRITICAL --format template --template @.ci/html.tpl -o .ci/imagesreport.html ${image}"
         publishHTML (target : [allowMissing: true,
             alwaysLinkToLastBuild: true,
             keepAll: true,
