@@ -58,7 +58,7 @@ def deployToK8S(args){
     def gitopsRepo = args.gitopsRepo
     def gitCredential = args.gitCredential
     def serviceName = args.serviceName
-    def newTag = ${BRANCH_NAME}-${BUILD_NUMBER}
+    def newTag = "${BRANCH_NAME}-${BUILD_NUMBER}"
     stage ("Deploy To K8S") {
         script {
             // Clone the GitOps repository
