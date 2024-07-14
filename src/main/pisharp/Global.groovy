@@ -71,7 +71,7 @@ def deployToK8S(args){
 
                 // Update the image tag in the deployment YAML file
                 sh """
-                sed -i "s|\(image: [^:]*:\)[^ ]*|\1${newTag}|g"
+                    sed -i "s|\\(image: [^:]*:\\)[^ ]*|\\1${newTag}|g" ${deploymentYamlFile}
                 """
 
                 // Commit and push the changes
