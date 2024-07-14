@@ -53,3 +53,36 @@ def pushDockerImages(args){
         }
     }
 }
+
+def deployToK8S(args){
+    def gitopsRepo = args.gitopsRepo
+    def gitCredential = args.gitCredential
+    def serviceName = args.serviceName
+    def newTag = ${BRANCH_NAME}-${BUILD_NUMBER}
+    stage ("Deploy To K8S") {
+        script {
+            // Clone the GitOps repository
+            dir('gitops') {
+                git credentialsId: "${gitCredential}", url: "${gitopsRepo}"
+
+                // Determine the target directory based on the branch
+                def targetDir = (env.BRANCH_NAME == 'main') ? 'prod' : 'nonprod'
+                def deploymentYamlFile = "${targetDir}/${serviceName}/deployment.yaml"
+
+                // Update the image tag in the deployment YAML file
+                sh """
+                sed -i "s|\(image: [^:]*:\)[^ ]*|\1${newTag}|g"
+                """
+
+                // Commit and push the changes
+                sh """
+                git config user.email "jenkins-ci@example.com"
+                git config user.name "Jenkins"
+                git add ${deploymentYamlFile}
+                git commit -m "Update image to ${serviceName}"
+                git push origin main
+                """
+            }
+        }
+    }
+}
