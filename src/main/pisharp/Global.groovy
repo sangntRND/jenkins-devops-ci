@@ -25,3 +25,17 @@ def processTestResults(){
         cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "results/coverage.xml", conditionalCoverageTargets: '70, 0, 0', failUnhealthy: true, failUnstable: true, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false
     }
 }
+
+def buildDockerImages(args){
+    def imageRegistry = args.imageRegistry
+    def credentialDockerId = args.credentialDockerId
+    def namespaceRegistry = args.namespaceRegistry
+    def serviceName = args.serviceName
+    stage ("Build Docker Images") {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialId: credentialDockerId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            docker.withRegistry("https://${imageRegistry}", credentialId ) {
+                docker.build("${imageRegistry}/${namespaceRegistry}/${serviceName}:${BUILD_NUMBER}", "--force-rm --no-cache -f Dockerfile .")
+            }
+        }
+    }
+}

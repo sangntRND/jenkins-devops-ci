@@ -1,22 +1,10 @@
 import main.pisharp.*
 
 def call() {
-    // String projectName = "projecttemplate-api"
-    // String runtime = "Microsoft.DSX.ProjectTemplate.API"
-    // String publishProject = "ProjectTemplate/Microsoft.DSX.ProjectTemplate.API/Microsoft.DSX.ProjectTemplate.API.csproj"
-    // String baseImage     = "pisharpeddemo.azurecr.io/baseimages/ubuntu"
-    // String baseTag       = "jammy-dotnet-sdk-6.0.414"
-    // String baseSonarTag  = "sonar"
-    // String demoRegistry = "pisharpeddemo.azurecr.io"
-    // String sonarToken = "sonar-token"
-    // String sonarHost = "http://20.42.95.177:9000"
-    // String acrCredential = 'acr-demo-token'
-    // String k8sCredential = 'aksdemo'
-    // String k8scontextName = "demo"
-    // String namespace = "demo"
-    // String containerName = "jenkins"
-    // String rununitTest = "dotnet test --no-build --no-restore -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
-    def projectName = pwd().tokenize('/').last()
+    def imageRegistry = "hub.docker.com"
+    def credentialDockerId = "dockerhub-demo-token"
+    def namespaceRegistry = "sanghvt"
+    def serviceName = pwd().tokenize('/').last()
     
     def trivy = new Trivy()
     def global = new Global()
@@ -36,8 +24,8 @@ def call() {
     trivy.trivyScanVulnerabilities()
     global.runPythonUnitTest()
     global.processTestResults()
-    sonar.sonarQubeAnalysis(projectName)
-
+    sonar.sonarQubeAnalysis(serviceName)
+    global.buildDockerImages(imageRegistry: imageRegistry, credentialDockerId: credentialDockerId, namespaceRegistry: namespaceRegistry, serviceName: serviceName)
 
     // stage ("Build Docker Images Run Time") {
     //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
