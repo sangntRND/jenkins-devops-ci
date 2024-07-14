@@ -5,6 +5,7 @@ def call(serviceName) {
     def credentialDockerId = "dockerhub-demo-token"
     def namespaceRegistry = "sanghvt"
     def gitopsRepo = 'https://github.com/sangntRND/pisharped-gitops.git'
+    def gitopsBranch = 'main'
     def gitCredential = 'github'
     def imageBuildTag = "${imageRegistry}/${namespaceRegistry}/${serviceName}:${BRANCH_NAME}-${BUILD_NUMBER}"
     def sonarHostURL = 'http://13.213.249.3:9000/'
@@ -28,5 +29,5 @@ def call(serviceName) {
     global.buildDockerImages(imageRegistry: imageRegistry, credentialDockerId: credentialDockerId, namespaceRegistry: namespaceRegistry, serviceName: serviceName)
     trivy.trivyScanDockerImages(imageBuildTag)
     global.pushDockerImages(imageRegistry: imageRegistry, credentialDockerId: credentialDockerId, namespaceRegistry: namespaceRegistry, serviceName: serviceName)
-    global.deployToK8S(gitopsRepo: gitopsRepo, gitCredential: gitCredential, serviceName: serviceName)
+    global.deployToK8S(gitopsRepo: gitopsRepo, gitopsBranch: gitopsBranch, gitCredential: gitCredential, serviceName: serviceName)
 }

@@ -58,12 +58,13 @@ def deployToK8S(args){
     def gitopsRepo = args.gitopsRepo
     def gitCredential = args.gitCredential
     def serviceName = args.serviceName
+    def gitopsBranch = args.gitopsBranch
     def newTag = "${BRANCH_NAME}-${BUILD_NUMBER}"
     stage ("Deploy To K8S") {
         script {
             // Clone the GitOps repository
             dir('gitops') {
-                git credentialsId: "${gitCredential}", url: "${gitopsRepo}", branch: 'main'
+                git credentialsId: "${gitCredential}", url: "${gitopsRepo}", branch: "${gitopsBranch}"
 
                 // Determine the target directory based on the branch
                 def targetDir = (env.BRANCH_NAME == 'main') ? 'prod' : 'nonprod'
@@ -73,15 +74,16 @@ def deployToK8S(args){
                 sh """
                     sed -i "s|\\(image: [^:]*:\\)[^ ]*|\\1${newTag}|g" ${deploymentYamlFile}
                 """
-
-                // Commit and push the changes
-                sh """
-                git config user.email "jenkins-ci@example.com"
-                git config user.name "Jenkins"
-                git add ${deploymentYamlFile}
-                git commit -m "Update image to ${serviceName}"
-                git push origin main
-                """
+                withCredentials([gitUsernamePassword(credentialsId: "${gitCredential}")]) {
+                    // Commit and push the changes
+                    sh """
+                    git config user.email "jenkins-ci@example.com"
+                    git config user.name "Jenkins"
+                    git add ${deploymentYamlFile}
+                    git commit -m "Update image to ${serviceName}"
+                    git push origin ${gitopsBranch}
+                    """
+                }
             }
         }
     }

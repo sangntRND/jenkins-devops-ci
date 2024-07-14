@@ -170,7 +170,7 @@ password: admin
 		![image](./assets/jenkins_github_enterprise_system.png)
 		- Global Pipeline Libraries
 			- Name: ```jenkins-devops-ci```
-			- Default version: ```pisharped```
+			- Default version: ```main```
 			- [x] Allow default version to be overridden
 			- [x] Include @Library changes in job recent changes 
 			- Retrieval method: Modern SCM
