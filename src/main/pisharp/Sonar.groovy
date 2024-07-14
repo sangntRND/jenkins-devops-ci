@@ -1,6 +1,7 @@
 package main.pisharp
 
 def sonarQubeAnalysis() {
+    stage('SonarQube analysis') {
         script {
             // Run SonarQube Scanner inside a Docker container
             sh """
@@ -16,4 +17,5 @@ def sonarQubeAnalysis() {
             -Dsonar.python.coverage.reportPaths=results/coverage.xml
             """
         }
+    }
 }
