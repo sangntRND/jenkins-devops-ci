@@ -21,7 +21,7 @@ def sonarQubeAnalysis(projectKey,sonarHostURL) {
         }
     }
     stage('Quality Gate') {
-        timeout(time: 1, unit: 'HOURS') {
+        timeout(time: 2, unit: 'MINUTES') {
             waitForQualityGate abortPipeline: true
         }
     }
