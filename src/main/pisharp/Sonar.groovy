@@ -4,7 +4,7 @@ def sonarQubeAnalysis() {
     def SONAR_HOST_URL = 'http://13.213.249.3:9000/'
     stage('SonarQube analysis') {
         script {
-            withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_AUTH_TOKEN')]) {
+            withCredentials([string(credentialsId: "sonar-token", variable: 'SONAR_AUTH_TOKEN')]) {
                 // Run SonarQube Scanner inside a Docker container
                 sh """
                 docker run --rm -v ./:/usr/src -w /usr/src \
