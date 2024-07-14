@@ -8,7 +8,7 @@ def call() {
     def gitCredential = 'github'
     def serviceName = pwd().tokenize('/').last()tokenize('_').first()
     def imageBuildTag = "${imageRegistry}/${namespaceRegistry}/${serviceName}:${BRANCH_NAME}-${BUILD_NUMBER}"
-    
+    def sonarHostURL = 'http://13.213.249.3:9000/'
     def trivy = new Trivy()
     def global = new Global()
     def sonar = new Sonar()
@@ -25,7 +25,7 @@ def call() {
     trivy.trivyScanVulnerabilities()
     global.runPythonUnitTest()
     global.processTestResults()
-    sonar.sonarQubeAnalysis(serviceName)
+    sonar.sonarQubeAnalysis(serviceName, sonarHostURL)
     global.buildDockerImages(imageRegistry: imageRegistry, credentialDockerId: credentialDockerId, namespaceRegistry: namespaceRegistry, serviceName: serviceName)
     trivy.trivyScanDockerImages(imageBuildTag)
     global.pushDockerImages(imageRegistry: imageRegistry, credentialDockerId: credentialDockerId, namespaceRegistry: namespaceRegistry, serviceName: serviceName)

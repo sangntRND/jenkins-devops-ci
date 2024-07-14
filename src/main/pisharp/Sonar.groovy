@@ -1,10 +1,10 @@
 package main.pisharp
 
-def sonarQubeAnalysis(projectKey) {
-    def SONAR_HOST_URL = 'http://13.213.249.3:9000/'
+def sonarQubeAnalysis(projectKey,sonarHostURL) {
+    def SONAR_HOST_URL = sonarHostURL
     stage('SonarQube analysis') {
         script {
-            withSonarQubeEnv('My SonarQube Server'){
+            withSonarQubeEnv('SonarQube'){
                 withCredentials([string(credentialsId: "sonar-token", variable: 'SONAR_AUTH_TOKEN')]) {
                     // Run SonarQube Scanner inside a Docker container
                     sh """
