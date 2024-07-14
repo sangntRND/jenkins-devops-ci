@@ -1,8 +1,0 @@
-# GITHUB:
-    export GITHUB_TOKEN="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"
-# GITLAB
-    export GITLAB_TOKEN="your_private_github_token"
-
-trivy repo https://github.com/LocTaRND/projecttemplate-frontend
-
-# Severity

@@ -1,7 +1,0 @@
-ARG BASEIMG
-ARG IMG_VERSION
-FROM $BASEIMG:$IMG_VERSION as build
-WORKDIR /src
-COPY . .
-RUN dotnet build . \
-    && chown -R 987:981 /src

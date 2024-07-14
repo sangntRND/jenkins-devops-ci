@@ -63,7 +63,7 @@ def deployToK8S(args){
         script {
             // Clone the GitOps repository
             dir('gitops') {
-                git credentialsId: "${gitCredential}", url: "${gitopsRepo}"
+                git credentialsId: "${gitCredential}", url: "${gitopsRepo}", branch: 'main'
 
                 // Determine the target directory based on the branch
                 def targetDir = (env.BRANCH_NAME == 'main') ? 'prod' : 'nonprod'

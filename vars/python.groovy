@@ -16,7 +16,7 @@ def call() {
     stage ('Prepare Package') {
         script {
             sh "mkdir -p .ci"
-            writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
+            writeFile file: '.ci/html.tpl', text: libraryResource('trivy/html.tpl')
         }
     }
 
