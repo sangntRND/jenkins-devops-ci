@@ -3,7 +3,7 @@ package main.pisharp
 def pythonRunInstallDependencies(){
     stage ("Run Install Dependencies ") {
         sh "mkdir -p results"
-        sh 'docker run --rm -v $(pwd):/app python:3.9-slim bash -c "pip install poetry && cd /app && poetry install"'
+        sh 'docker run --rm -v $(pwd):/app python:3.9-slim bash -c "pip install poetry && cd /app && poetry config virtualenvs.in-project true && poetry install"'
     }    
 }
 
