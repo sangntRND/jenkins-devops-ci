@@ -5,6 +5,7 @@ def call() {
     def credentialDockerId = "dockerhub-demo-token"
     def namespaceRegistry = "sanghvt"
     def serviceName = pwd().tokenize('/').last()
+    def imageBuildTag = "${imageRegistry}/${namespaceRegistry}/${serviceName}:${BUILD_NUMBER}"
     
     def trivy = new Trivy()
     def global = new Global()
@@ -24,6 +25,8 @@ def call() {
     global.processTestResults()
     sonar.sonarQubeAnalysis(serviceName)
     global.buildDockerImages(imageRegistry: imageRegistry, credentialDockerId: credentialDockerId, namespaceRegistry: namespaceRegistry, serviceName: serviceName)
+    trivy.trivyScanDockerImages(imageBuildTag)
+    global.pushDockerImages(imageRegistry: imageRegistry, credentialDockerId: credentialDockerId, namespaceRegistry: namespaceRegistry, serviceName: serviceName)
 
     // stage ("Build Docker Images Run Time") {
     //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
