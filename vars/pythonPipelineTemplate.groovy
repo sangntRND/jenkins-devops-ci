@@ -1,12 +1,12 @@
 import main.pisharp.*
 
-def call() {
+def call(serviceName) {
     def imageRegistry = "registry.hub.docker.com"
     def credentialDockerId = "dockerhub-demo-token"
     def namespaceRegistry = "sanghvt"
     def gitopsRepo = 'https://github.com/sangntRND/pisharped-gitops.git'
     def gitCredential = 'github'
-    def serviceName = pwd().tokenize('/').last().tokenize('_').first()
+    def serviceName = serviceName
     def imageBuildTag = "${imageRegistry}/${namespaceRegistry}/${serviceName}:${BRANCH_NAME}-${BUILD_NUMBER}"
     def sonarHostURL = 'http://13.213.249.3:9000/'
     def trivy = new Trivy()

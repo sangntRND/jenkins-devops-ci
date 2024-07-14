@@ -31,7 +31,7 @@ void call(Map pipelineParams) {
                 }
                 steps {
                     script {
-                        python()
+                        pythonPipelineTemplate("projecttemplate-python1-api")
                     }
                 }
             }
