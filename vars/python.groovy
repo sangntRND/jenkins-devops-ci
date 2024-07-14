@@ -34,20 +34,11 @@ def call() {
     }
 
     trivy.trivyScanSecrets()
+    global.pythonRunInstallDependencies()
+    trivy.trivyScanVulnerabilities()
     global.runPythonUnitTest()
     global.processTestResults()
-    // stage ('Process Test Results') {
-    //     docker.image("${containerName}/${projectName}-sdk:${BUILD_NUMBER}").inside() {
-    //         xunit(
-    //             testTimeMargin: '600000',
-    //             thresholdMode: 1,
-    //             thresholds: [failed(), skipped()],
-    //             tools: [MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: "results/*.trx", skipNoTestFiles: false, stopProcessingIfError: true)]
-    //         )
-    //     }
 
-    //     cobertura coberturaReportFile: "results/*/*.xml"
-    // }
 
     // stage('SonarQube analysis') {
     //     script {

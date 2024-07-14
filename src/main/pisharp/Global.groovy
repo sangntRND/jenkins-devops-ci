@@ -1,9 +1,16 @@
 package main.pisharp
 
+def pythonRunInstallDependencies(){
+    stage ("Run Install Dependencies ") {
+        sh "mkdir -p results"
+        sh 'docker run --rm -v $(pwd):/app python:3.9-slim bash -c "pip install poetry && cd /app && poetry install"'
+    }    
+}
+
 def runPythonUnitTest() {
     stage ("Run Unit Tests") {
         sh "mkdir -p results"
-        sh 'docker run --rm -v $(pwd):/app python:3.9-slim bash -c "pip install poetry && cd /app && poetry install && poetry run pytest --cov=app --cov-report=xml:results/coverage.xml --junitxml=results/test-results.xml"'
+        sh 'docker run --rm -v $(pwd):/app python:3.9-slim bash -c "pip install poetry && cd /app && poetry run pytest --cov=app --cov-report=xml:results/coverage.xml --junitxml=results/test-results.xml"'
     }
 }
 
