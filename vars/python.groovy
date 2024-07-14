@@ -16,14 +16,11 @@ def call() {
     // String namespace = "demo"
     // String containerName = "jenkins"
     // String rununitTest = "dotnet test --no-build --no-restore -l:trx --collect:'XPlat Code Coverage' --results-directory ./results"
+    def projectName = pwd().tokenize('/').last()
+    
     def trivy = new Trivy()
     def global = new Global()
     def sonar = new Sonar()
-//========================================================================
-//========================================================================
-
-//========================================================================
-//========================================================================
 
     stage ('Prepare Package') {
         script {
@@ -39,17 +36,8 @@ def call() {
     trivy.trivyScanVulnerabilities()
     global.runPythonUnitTest()
     global.processTestResults()
-    sonar.sonarQubeAnalysis()
+    sonar.sonarQubeAnalysis(projectName)
 
-
-    // stage('SonarQube analysis') {
-    //     script {
-    //         withCredentials([string(credentialsId: sonarToken, variable: 'SONAR_TOKEN')]) {
-    //             docker.build("${containerName}/${projectName}-sonar:${BUILD_NUMBER}", "--force-rm --no-cache -f ./.ci/Dockerfile.SonarBuild \
-    //             --build-arg BASEIMG=${baseImage} --build-arg IMG_VERSION=${baseSonarTag} --build-arg SONAR_HOST=${sonarHost} --build-arg SONAR_PROJECT=${projectName} --build-arg SONAR_TOKEN=${SONAR_TOKEN} ${WORKSPACE}") 
-    //         }
-    //     }
-    // }
 
     // stage ("Build Docker Images Run Time") {
     //     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: acrCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {

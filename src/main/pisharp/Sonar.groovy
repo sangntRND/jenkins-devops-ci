@@ -1,6 +1,6 @@
 package main.pisharp
 
-def sonarQubeAnalysis() {
+def sonarQubeAnalysis(projectKey) {
     def SONAR_HOST_URL = 'http://13.213.249.3:9000/'
     stage('SonarQube analysis') {
         script {
@@ -12,7 +12,7 @@ def sonarQubeAnalysis() {
                 -e SONAR_LOGIN=${SONAR_AUTH_TOKEN} \
                 sonarsource/sonar-scanner-cli:latest \
                 sonar-scanner \
-                -Dsonar.projectKey=projecttemplate-python1-api \
+                -Dsonar.projectKey=${projectKey} \
                 -Dsonar.sources=. \
                 -Dsonar.exclusions=**/tests/** \
                 -Dsonar.host.url=${SONAR_HOST_URL} \
