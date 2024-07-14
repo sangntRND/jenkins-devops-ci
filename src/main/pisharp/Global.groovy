@@ -70,9 +70,9 @@ def deployToK8S(args){
                 def deploymentYamlFile = "${targetDir}/${serviceName}/deployment.yaml"
 
                 // Update the image tag in the deployment YAML file
-                sh '''
-                    echo "Hello world"
-                '''
+                sh """
+                    sed -i "s|\\(image: [^:]*:\\)[^ ]*|\\1${newTag}|g" ${deploymentYamlFile}
+                """
 
                 // Commit and push the changes
                 sh """

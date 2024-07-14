@@ -23,8 +23,6 @@ def sonarQubeAnalysis(projectKey) {
         }
     }
     stage('Quality Gate') {
-        steps {
-            waitForQualityGate abortPipeline: true
-        }
+        waitForQualityGate abortPipeline: true
     }
 }
