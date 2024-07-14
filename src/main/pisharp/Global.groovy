@@ -32,9 +32,23 @@ def buildDockerImages(args){
     def namespaceRegistry = args.namespaceRegistry
     def serviceName = args.serviceName
     stage ("Build Docker Images") {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialId: credentialDockerId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            docker.withRegistry("https://${imageRegistry}", credentialId ) {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialDockerId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            docker.withRegistry("https://${imageRegistry}", credentialDockerId ) {
                 docker.build("${imageRegistry}/${namespaceRegistry}/${serviceName}:${BUILD_NUMBER}", "--force-rm --no-cache -f Dockerfile .")
+            }
+        }
+    }
+}
+
+def pushDockerImages(args){
+    def imageRegistry = args.imageRegistry
+    def credentialDockerId = args.credentialDockerId
+    def namespaceRegistry = args.namespaceRegistry
+    def serviceName = args.serviceName
+    stage ("Push Docker Images") {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialDockerId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            docker.withRegistry("https://${imageRegistry}", credentialDockerId ) {
+                sh "docker push ${imageRegistry}/${namespaceRegistry}/${serviceName}:${BUILD_NUMBER}"
             }
         }
     }

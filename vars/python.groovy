@@ -13,8 +13,6 @@ def call() {
     stage ('Prepare Package') {
         script {
             sh "mkdir -p .ci"
-            writeFile file: '.ci/deployment.yml', text: libraryResource('deploy/be/deployment.yml')
-            writeFile file: '.ci/service.yml', text: libraryResource('deploy/be/service.yml')
             writeFile file: '.ci/html.tpl', text: libraryResource('dev/demo/flows/trivy/html.tpl')
         }
     }
