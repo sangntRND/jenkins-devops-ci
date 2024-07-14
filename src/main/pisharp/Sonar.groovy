@@ -2,12 +2,13 @@ package main.pisharp
 
 def sonarQubeAnalysis(projectKey,sonarHostURL) {
     def SONAR_HOST_URL = sonarHostURL
+    def scannerHome = tool 'SonarQubeScanner';
     stage('SonarQube analysis') {
         script {
             withSonarQubeEnv('SonarQube'){
                 // Run SonarQube Scanner inside a Docker container
                 sh """
-                ${env.SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
+                ${scannerHome}/bin/sonar-scanner \
                 -Dsonar.projectKey=${projectKey} \
                 -Dsonar.sources=. \
                 -Dsonar.exclusions=**/tests/** \
