@@ -154,19 +154,26 @@ password: admin
 				- Server authentication token: sonar-token
 			![image](./assets/jenkins_sonar_server_configuration.png)
 
-- Repositories:
-	
-	- jenkins-devops-ci: include jenkin shared library and pipeline
-	- gitops: include the k8s manifest
-		- Note: Make sure that you update the image registry with your dockerhub repository in deployment file
-	- application: include application source code\
-	Ref:
-		- https://github.com/sangntRND/jenkins-devops-ci
-		- https://github.com/sangntRND/pisharped-gitops
-		- https://github.com/sangntRND/projecttemplate-python1-api
+- Repositories: Create new github orginization and add the repositories
+	- Create new github orginization: 
+		- URL: https://github.com/account/organizations/new?plan=free
+		- Organization name: the new org name
+		- Contact email: personal mail
+		- This organization belongs to: [x] My personal account
+		![image](./assets/github_create_org.png)
+	- Add the repositories:
+		- jenkins-devops-ci: include jenkin shared library and pipeline
+		- gitops: include the k8s manifest
+			- Note: Make sure that you update the image registry with your dockerhub repository in deployment file
+		- application: include application source code\
+		Ref:
+			- https://github.com/sangntRND/jenkins-devops-ci
+			- https://github.com/sangntRND/pisharped-gitops
+			- https://github.com/sangntRND/projecttemplate-python1-api
+		![image](./assets/github_list_repos.png)
 
 # Step by Step to create the pipeline
-## Step 1: Create the new iteam with Organization Folder type
+## Create the new iteam with Organization Folder type
    ![image](./assets/jenkins_1_create_org_folder.png)
    - Keep everything default except below configuration
 	  - Projects:
@@ -175,9 +182,9 @@ password: admin
 		  - Credentials: github
 		  - Owner: GitHub Organization or GitHub User Account
 			![image](./assets/jenkins_1_org_config.png)
-   - Save configuration and the jenkin will scan the entire organization to find the repositories it contains
+   - Save configuration and the jenkin will scan the entire organization to find the repositories it contains the Jenkinfile
    ![image](./assets/jenkins_1_result.png)
-## Step 2: 
+## 
 # Refer
 - https://www.jenkins.io/doc/book/pipeline/shared-libraries/
 - https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli
