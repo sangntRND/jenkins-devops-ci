@@ -9,7 +9,7 @@ def sonarQubeAnalysis(projectKey,sonarHostURL) {
                 // Run SonarQube Scanner inside a Docker container
                 sh """
                 ${scannerHome}/bin/sonar-scanner \
-                -Dsonar.projectKey=${projectKey} \
+                -Dsonar.projectKey=${projectKey}-${env.BRANCH_NAME} \
                 -Dsonar.sources=. \
                 -Dsonar.exclusions=**/tests/** \
                 -Dsonar.host.url=${env.SONAR_HOST_URL} \

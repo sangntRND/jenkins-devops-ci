@@ -8,17 +8,18 @@
 # DevSecOps Project
 This is the devsecops project and will contain all automation related to CI Architecture. 
 
-![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/753caef3-0d14-4c76-a168-40385298bcb9)
+![image](./assets/jenkins-ci-cd-arch.png)
 
  
 Folder Structure
- - resources - Jenkins Library Resources (External libraries may load adjunct files from a resources/ directory using the libraryResource step)
+ - assets - include some images that used for the documentation
+ - resources - Jenkins Library Resources allows the libraryResource step to be used from an external library to load associated non-Groovy files
+ - src - directory should look like standard Java source directory structure. It include class or method is reused by the pipeline
  - vars - Jenkins Libarary Scripts (Only entire pipelines can be defined in shared libraries as of this time. This can only be done in vars/*.groovy, and only in a call method. Only one Declarative Pipeline can be executed in a single build, and if you attempt to execute a second one, your build will fail as a result.)
- - training - Include some groovy templates to implementing ci/cd flow with Groovy script.
 
 # What you'll learn
 - Understand the basics of the Jenkins architecture.
-- Understand the concept of the Job DSL Plugin on Jenkins and its features.
+<!-- - Understand the concept of the Job DSL Plugin on Jenkins and its features. -->
 - Understand with Shared Libraries and Plug-ins
 - Implement CICD Pipelines Security With Jenkins Groovy script
 - Understand the basic scenario CICD flow
@@ -70,26 +71,9 @@ sudo usermod -aG docker $USER
 
 ***Note: Log out shell and login again***
 
-# Install kind and usage
-kind is a tool for running local Kubernetes clusters using Docker container “nodes”.
-kind was primarily designed for testing Kubernetes itself, but may be used for local development or CI.
-
+# Install git
 ```
-
-[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.23.0/kind-linux-amd64
-chmod +x ./kind
-sudo mv ./kind /usr/local/bin/kind
-
-# Create the new K8S cluster
-kind create cluster --name my-kind-cluster
-
-```
-
-# Install kubectl
-```
-   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-   sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-   kubectl version --client
+   sudo apt-get install git-all
 ```
 
 # Install Trivy
@@ -116,7 +100,7 @@ password: admin
 - Jenkins Server has
 	- installed some
 		- Plugins: 
-			- Jenkins suggested (Login first time)
+			- Jenkins suggested (Will install when login first time)
  			- Additional Plugin: http://JenkinIP:8080/manage/pluginManager/available
 				- Docker Pipeline
 				- xUnit
@@ -125,21 +109,18 @@ password: admin
 				- HTML Publisher
 				- SonarQube Scanner
 				- Pipeline Utility Steps
-				- Kubernetes
-				- Kubernetes CLI
-				- Kubernetes Credentials
 				![image](./assets/jenkins_plugins.png)
-		- Tools: (Done above steps)
-			- kubectl cli
-			- docker
-            - trivy
+		- Tools: http://JenkinIP:8080/manage/configureTools/
+			- SonarQube Scanner:
+				+ name: SonarQubeScanner
+				+ version: Any version
+			![image](./assets/jenkins_tool_sonar_scanner.png)
 	- added credentials: http://JenkinIP:8080/manage/credentials/store/system/domain/_/
 		- GitHub with Kind Username with password (ID name: github)
 			+ username: github username
 			+ password: generate the new token with full permissions ( https://github.com/settings/tokens )\
 			-> Create the github credentials to access github: 
 			![image](./assets/jenkins_github_credential.png)
-  		<!-- - GitHub Manage Webhook with Kind Secret text (ID name: githubserver)	  -->
 		- Dockerhub with Kind Username with password (ID name: dockerhub-demo-token)
 			+ username: dockerhub username
 			+ password: generate the new token with full permissions ( https://hub.docker.com/settings/security ) \
@@ -150,20 +131,7 @@ password: admin
 			![image](./assets/sonar_token.png) \
 			-> Create the Sonarqube credentails
 			![image](./assets/jenkins_sonar_credential.png)
-  		<!-- - Connection Strings (database info) with Kind Secret text (ID name: connectionstrings) -->
-		- Kubeconfig with Kind Secret text (ID name: k8s-kind-demo)
-			+ Secret text get from running this command in the server: 
-				```
-				kind get kubeconfig --name=my-kind-cluster 
-				```
-				-> Create the Kubeconfig credentails
-				![image](./assets/jenkins_k8s_credential.png)
-	- Setup the Jenkins System to connect Github and shared libaries
- 		- GitHub Servers
-   			- Name: ```github```
-			- API URL: https://api.github.com
-			- Credentials: ```githubserver```
-           	- [x] Manage hooks   
+	- Setup the Jenkins System to connect Github and shared libaries: http://JenkinIP:8080/manage/configure
    		- GitHub Enterprise Servers
 			- API endpoint: https://api.github.com
 			- Name: github
@@ -178,24 +146,24 @@ password: admin
 				- Project Repository: https://github.com/sangntRND/jenkins-devops-ci.git
 				- Credentials: ```github```
     	![image](./assets/jenkins_global_pipeline_libs.png)
+		- SonarQube servers
+			- [x] Environment variables
+			- SonarQube installations
+				- Name: SonarQube
+				- Server URL: http://localhost:9000 (if sonarqube installed same VM with Jenkins)
+				- Server authentication token: sonar-token
+			![image](./assets/jenkins_sonar_server_configuration.png)
 
-- ACR
-	- Create ACR called: ```pisharpeddemo ```
-  	- Admin user: ```Enable```
-  	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/3b68abf8-0c03-40b7-9625-ed909572462d)
-
-- SQL Server:
-	- Create SQL server called: ```pisharpeddemo```
-   	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/871904a6-2352-47c1-82a1-76c5f6dbe7ee)
-	- Create database name called: ```projecttemplate```
-	![image](https://github.com/LocTaRND/jenkins-devops-ci/assets/17311899/fa5eee13-c7da-4c20-a671-c6a3b358c132)
- 
-- AKS
-	- Create AKS called: ```demo```
-	- Attach an ACR to an AKS cluster:
-   		```az aks update -n demo -g demo --attach-acr pisharpeddemo```
 - Repositories:
-	- https://github.com/nashtech-garage/dotnet-bookstore-api/tree/jenkins
+	
+	- jenkins-devops-ci: include jenkin shared library and pipeline
+	- gitops: include the k8s manifest
+		- Note: Make sure that you update the image registry with your dockerhub repository in deployment file
+	- application: include application source code\
+	Ref:
+		- https://github.com/sangntRND/jenkins-devops-ci
+		- https://github.com/sangntRND/pisharped-gitops
+		- https://github.com/sangntRND/projecttemplate-python1-api
 
 # Step by Step to create the pipeline
 ## Step 1: Create the new iteam with Organization Folder type
