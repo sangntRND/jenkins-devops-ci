@@ -22,26 +22,26 @@ def call(serviceName) {
     // Step 1: Scan all the application to check if we can put any sensitive informations in the source code or not
     trivy.trivyScanSecrets()
 
-    // Step 2: Install python dependencies
-    global.pythonRunInstallDependencies()
+    // Step 2: Run the unit test to check function code and show the test result
+    global.runPythonUnitTest()
+    global.processTestResults()
 
     // Step 3: Scan the vulnerabilities of each python dependencies
     trivy.trivyScanVulnerabilities()
 
-    // Step 4: Run the unit test to check function code and show the test result
-    global.runPythonUnitTest()
-    global.processTestResults()
-
-    // Step 5: Scan static code to check the Code smell, Bug, Vulnerability
+    // Step 4: Scan static code to check the Code smell, Bug, Vulnerability
     sonar.sonarQubeAnalysis(serviceName, sonarHostURL)
 
-    // Step 5: Build docker images with the new tag
+    // Step 5: Install python dependencies
+    global.pythonRunInstallDependencies()
+
+    // Step 6: Build docker images with the new tag
     global.buildDockerImages(imageRegistry: imageRegistry, credentialDockerId: credentialDockerId, namespaceRegistry: namespaceRegistry, serviceName: serviceName)
     
-    // Step 6: Scan the vulnerabilities of the new image
+    // Step 7: Scan the vulnerabilities of the new image
     trivy.trivyScanDockerImages(imageBuildTag)
     
-    // Step 7: Push image to image registry and update the new image tag in the gitops repository
+    // Step 8: Push image to image registry and update the new image tag in the gitops repository
     // and then Argocd can sync the new deployment
     global.pushDockerImages(imageRegistry: imageRegistry, credentialDockerId: credentialDockerId, namespaceRegistry: namespaceRegistry, serviceName: serviceName)
     global.deployToK8S(gitopsRepo: gitopsRepo, gitopsBranch: gitopsBranch, gitCredential: gitCredential, serviceName: serviceName)

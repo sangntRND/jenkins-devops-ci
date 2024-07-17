@@ -3,7 +3,7 @@ package main.pisharp
 def sonarQubeAnalysis(projectKey,sonarHostURL) {
     def SONAR_HOST_URL = sonarHostURL
     def scannerHome = tool 'SonarQubeScanner';
-    stage('SonarQube analysis') {
+    stage('Analysis Static Code By SonarQube') {
         script {
             withSonarQubeEnv('SonarQube'){
                 // Run SonarQube Scanner inside a Docker container
@@ -20,7 +20,7 @@ def sonarQubeAnalysis(projectKey,sonarHostURL) {
 
         }
     }
-    stage('Quality Gate') {
+    stage('Quality Gate Check') {
         timeout(time: 2, unit: 'MINUTES') {
             waitForQualityGate abortPipeline: true
         }

@@ -10,7 +10,7 @@ def pythonRunInstallDependencies(){
 def runPythonUnitTest() {
     stage ("Run Unit Tests") {
         sh "mkdir -p results"
-        sh 'docker run --rm -v $(pwd):/app python:3.9-slim bash -c "pip install poetry && cd /app && poetry run pytest --cov=app --cov-report=xml:results/coverage.xml --junitxml=results/test-results.xml"'
+        sh 'docker run --rm -v $(pwd):/app python:3.9-slim bash -c "pip install poetry && cd /app && poetry config virtualenvs.in-project true && poetry install && poetry run pytest --cov=app --cov-report=xml:results/coverage.xml --junitxml=results/test-results.xml"'
     }
 }
 
@@ -31,7 +31,7 @@ def buildDockerImages(args){
     def credentialDockerId = args.credentialDockerId
     def namespaceRegistry = args.namespaceRegistry
     def serviceName = args.serviceName
-    stage ("Build Docker Images") {
+    stage ("Build Images by Docker") {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialDockerId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             docker.withRegistry("https://${imageRegistry}", credentialDockerId ) {
                 docker.build("${imageRegistry}/${namespaceRegistry}/${serviceName}:${BRANCH_NAME}-${BUILD_NUMBER}", "--force-rm --no-cache -f Dockerfile .")
@@ -60,7 +60,7 @@ def deployToK8S(args){
     def serviceName = args.serviceName
     def gitopsBranch = args.gitopsBranch
     def newTag = "${BRANCH_NAME}-${BUILD_NUMBER}"
-    stage ("Deploy To K8S") {
+    stage ("Deploy To K8S Using GitOps Concept") {
         script {
             // Clone the GitOps repository
             dir('gitops') {
