@@ -169,7 +169,7 @@ password: admin
 		Ref:
 			- https://github.com/sangntRND/jenkins-devops-ci
 			- https://github.com/sangntRND/pisharped-gitops
-			- https://github.com/sangntRND/projecttemplate-python1-api
+			- https://github.com/sangntRND/orders-service
 		![image](./assets/github_list_repos.png)
 
 # Step by Step to create the pipeline
